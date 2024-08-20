@@ -3,8 +3,10 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
+from flask_jwt_extended import create_access_token, unset_jwt_cookies, JWTManager
 
 
 app = Flask(__name__)
@@ -19,6 +21,9 @@ migrate = Migrate(app, db)
 UPLOAD_FOLDER = './uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
+
+app.config['JWT_SECRET_KEY'] = 'nalsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
+jwt = JWTManager(app)
 
 class MasterBuku(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
@@ -54,10 +59,89 @@ class SinopsisBuku(db.Model):
     
     def __repr__(self):
         return f"<SinopsisBuku {self.id}>"
+    
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(250), nullable=False) 
+    email = db.Column(db.String(250), nullable=False, unique=True)
+    password = db.Column(db.String(250), nullable=False)
+    dateTime = db.Column(db.DateTime, nullable=True, default=db.func.now(), onupdate=db.func.now())
+    
+    def __init__(self, username, email, password) -> None:
+        super().__init__()
+        self.username = username
+        self.email = email
+        self.password = Bcrypt().generate_password_hash(password).decode('utf-8')
+        
+    def __repr__(self):
+        return f"<User {self.id}>"
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+##### USER #####
+
+# endpoint untuk menambahkan data user
+@app.route('/api/register', methods=['POST'])
+def register():
+    try:
+        data = request.get_json()
+        user = User(
+            username=data['username'],
+            email=data['email'],
+            password=data['password']
+        )
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'message': 'User berhasil ditambahkan'}), 201
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# endpoint untuk login
+@app.route('/api/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        user = User.query.filter_by(email=data['email']).first()
+        if user is None:
+            return jsonify({'message': 'User tidak ditemukan'}), 404
+        if Bcrypt().check_password_hash(user.password, data['password']):
+            access_token = create_access_token(identity=user.id)
+            return jsonify({'access_token': access_token}), 200
+        else:
+            return jsonify({'message': 'Password salah'}), 400
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+    
+
+    
+# get user
+@app.route('/api/getUser', methods=['GET'])
+def getUser():
+    try:
+        user = User.query.all()
+        userList = []
+        for u in user:
+            userList.append({
+                'id': u.id,
+                'username': u.username,
+                'email': u.email,
+            })
+        return jsonify({"data":userList}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+    
+# logout
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    try:
+        # Hanya kembalikan pesan sukses
+        return jsonify({'message': 'Logout berhasil'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+##### BUKU #####
 
 # endpoint untuk menambahkan data buku
 @app.route('/api/addBuku', methods=['POST'])
@@ -98,6 +182,32 @@ def getBuku():
         return jsonify({"data":bukuList}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+    
+
+# get buku and sinopsis
+@app.route('/api/getBukuSinopsis', methods=['GET'])
+def getBukuSinopsis():
+    try:
+        buku = MasterBuku.query.all()
+        sinopsis = SinopsisBuku.query.all()
+        bukuList = []
+        for b in buku:
+            for s in sinopsis:
+                if b.id == s.master_buku_id:
+                    bukuList.append({
+                        'id': b.id,
+                        'judul': b.judul,
+                        'pengarang': b.pengarang,
+                        'penerbitan': b.penerbitan,
+                        'deskripsi': b.deskripsi,
+                        'isbn': b.isbn,
+                        'sinopsis': s.sinopsis,
+                        'keyword': s.keyword
+                    })
+        return jsonify({"data":bukuList}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+    
 
 # get buku by id 
 @app.route("/api/getBuku/<id>", methods=['GET'])
@@ -137,6 +247,7 @@ def editBuku(id):
         return jsonify({'message': 'Data berhasil diubah'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+
 
 
 # delete buku by id
