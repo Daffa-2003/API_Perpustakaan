@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
-from flask_jwt_extended import create_access_token, unset_jwt_cookies, JWTManager
+from flask_jwt_extended import create_access_token, JWTManager
 
 
 app = Flask(__name__)
@@ -131,6 +131,23 @@ def getUser():
         return jsonify({"data":userList}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+
+# get login user 
+@app.route('/api/getUser/<id>', methods=['GET'])
+def getUserLogin(id):
+    try:
+        user = User.query.filter_by(id=id).first()
+        if user is None:
+            return jsonify({'message': 'Data tidak ditemukan'}), 404
+        return jsonify({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email
+        }), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+
     
 # logout
 @app.route('/api/logout', methods=['POST'])
@@ -304,7 +321,7 @@ def getCover(master_buku_id):
 def get_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     
-    
+
 # edit cover by id
 @app.route('/api/editCover/<id>', methods=['PUT'])
 def editCover(id):
