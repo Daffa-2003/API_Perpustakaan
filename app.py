@@ -10,7 +10,7 @@ from OpenAI import klasifikasiKeyword as keywords
 app = Flask(__name__)
 CORS(app)
 
-url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
+url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 db = SQLAlchemy(app)

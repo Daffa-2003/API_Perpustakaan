@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="E:\KULIAH\OTOBOOK\otobook_API\myenv"
+VIRTUAL_ENV="D:\projek-otobook\Otobook\API_Perpustakaan\myenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

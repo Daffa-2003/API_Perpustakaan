@@ -2,7 +2,7 @@ import openai
 import json
 import os
 
-openai.api_key = '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'
+openai.api_key = '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'
 
 # Cek apakah file cache ada
 cache_file = './Damy/cache_abstract.json'
