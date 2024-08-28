@@ -177,11 +177,21 @@ def editUser(id):
                 return jsonify({'message': 'Data berhasil diubah'}), 200
             else:
                 return jsonify({'message': 'File tidak valid'}), 400
+        else:
+            data = request.get_json()
+            master = {
+                'username' : data['username'],
+                'email' : data['email']
+            }
+            for key, value in master.items():
+                setattr(user, key, value)
+            db.session.commit()
+            return jsonify({'message': 'Data berhasil diubah'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
 
 @app.route('/fotoProfile/<filename>', methods=['GET'])
-def get_image(filename):
+def get_profile(filename):
     return send_from_directory(app.config['UPLOAD_FOTOPROFILE'], filename)
 
 # logout
