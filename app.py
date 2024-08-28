@@ -20,6 +20,8 @@ migrate = Migrate(app, db)
 
 UPLOAD_FOLDER = './uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOTOPROFILE = './fotoProfile/'
+app.config['UPLOAD_FOTOPROFILE'] = UPLOAD_FOTOPROFILE
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['JWT_SECRET_KEY'] = 'nalsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
@@ -65,6 +67,8 @@ class User(db.Model):
     username = db.Column(db.String(250), nullable=False) 
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
+    fotoprofile = db.Column(db.String(250), nullable=True)
+    path = db.Column(db.String(250), nullable=True)
     dateTime = db.Column(db.DateTime, nullable=True, default=db.func.now(), onupdate=db.func.now())
     
     def __init__(self, username, email, password) -> None:
@@ -106,9 +110,9 @@ def login():
         user = User.query.filter_by(email=data['email']).first()
         if user is None:
             return jsonify({'message': 'User tidak ditemukan'}), 404
-        if Bcrypt().check_password_hash(user.password, data['password']):
+        if Bcrypt().check_password_hash(user.password, data['password']):   
             access_token = create_access_token(identity=user.id)
-            return jsonify({'access_token': access_token}), 200
+            return jsonify({'access_token': access_token, 'id' : user.id}), 200
         else:
             return jsonify({'message': 'Password salah'}), 400
     except Exception as e:
@@ -147,8 +151,39 @@ def getUserLogin(id):
     except Exception as e:
         return jsonify({'message': str(e)}), 400
 
+# edit user by id
+@app.route('/api/editUser/<id>', methods=['PUT'])
+def editUser(id):
+    try:
+        user = User.query.filter_by(id=id).first()
+        if user is None:
+            return jsonify({'message': 'Data tidak ditemukan'}), 404
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOTOPROFILE'], filename))
+                master = {
+                    'username' : request.form['username'],
+                    'email' : request.form['email'],
+                    'fotoprofile' : filename,
+                    'path' : f'fotoProfile/{filename}'
+                }
+                for key, value in master.items():
+                    setattr(user, key, value)
+                db.session.commit()
+                return jsonify({'message': 'Data berhasil diubah'}), 200
+            else:
+                return jsonify({'message': 'File tidak valid'}), 400
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
 
-    
+@app.route('/fotoProfile/<filename>', methods=['GET'])
+def get_image(filename):
+    return send_from_directory(app.config['UPLOAD_FOTOPROFILE'], filename)
+
 # logout
 @app.route('/api/logout', methods=['POST'])
 def logout():
