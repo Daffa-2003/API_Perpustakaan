@@ -136,7 +136,7 @@ def getUser():
     except Exception as e:
         return jsonify({'message': str(e)}), 400
 
-# get login user 
+# get  user 
 @app.route('/api/getUser/<id>', methods=['GET'])
 def getUserLogin(id):
     try:
@@ -146,7 +146,9 @@ def getUserLogin(id):
         return jsonify({
             'id': user.id,
             'username': user.username,
-            'email': user.email
+            'email': user.email,
+            'fotoprofile' : user.fotoprofile,
+            'path' : user.path
         }), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
@@ -158,6 +160,8 @@ def editUser(id):
         user = User.query.filter_by(id=id).first()
         if user is None:
             return jsonify({'message': 'Data tidak ditemukan'}), 404
+
+        # Jika ada file dalam permintaan, tangani sebagai form-data
         if 'file' in request.files:
             file = request.files['file']
             if file.filename == '':
@@ -166,10 +170,10 @@ def editUser(id):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOTOPROFILE'], filename))
                 master = {
-                    'username' : request.form['username'],
-                    'email' : request.form['email'],
-                    'fotoprofile' : filename,
-                    'path' : f'fotoProfile/{filename}'
+                    'username': request.form['username'],
+                    'email': request.form['email'],
+                    'fotoprofile': filename,
+                    'path': f'/fotoProfile/{filename}'
                 }
                 for key, value in master.items():
                     setattr(user, key, value)
@@ -177,18 +181,24 @@ def editUser(id):
                 return jsonify({'message': 'Data berhasil diubah'}), 200
             else:
                 return jsonify({'message': 'File tidak valid'}), 400
-        else:
+
+        # Jika tidak ada file, harapkan data dalam bentuk JSON
+        elif request.content_type == 'application/json':
             data = request.get_json()
             master = {
-                'username' : data['username'],
-                'email' : data['email']
+                'username': data['username'],
+                'email': data['email']
             }
             for key, value in master.items():
                 setattr(user, key, value)
             db.session.commit()
             return jsonify({'message': 'Data berhasil diubah'}), 200
+        else:
+            return jsonify({'message': 'Unsupported Media Type'}), 415
+
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+
 
 @app.route('/fotoProfile/<filename>', methods=['GET'])
 def get_profile(filename):
