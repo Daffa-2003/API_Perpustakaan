@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from flask_jwt_extended import create_access_token, JWTManager
+from sqlalchemy import or_
 
 
 app = Flask(__name__)
@@ -501,6 +502,42 @@ def editBookSinopsis(id):
             setattr(sinopsis, key, value)
         db.session.commit()
         return jsonify({'message': 'Data berhasil diubah'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# search buku by keyword
+@app.route('/api/searchBuku', methods=['POST'])
+def searchBuku():
+    try:
+        data = request.get_json()
+        # sinopsis = SinopsisBuku.query.filter(SinopsisBuku.keyword.like(f"%{keyword['keyword']}%")).all()
+        sinopsis = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), MasterBuku.judul.ilike(f"%{data['keyword']}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()
+        bukuList = []
+        for s in sinopsis:
+           bukuList.append({
+                'id': s.master_buku_id,
+                'judul': s.master_buku_sinopsis.judul,  # Akses melalui backref
+                'pengarang': s.master_buku_sinopsis.pengarang,
+                'penerbitan': s.master_buku_sinopsis.penerbitan,
+                'deskripsi': s.master_buku_sinopsis.deskripsi,
+                'isbn': s.master_buku_sinopsis.isbn,
+                'sinopsis': s.sinopsis,
+                'keyword': s.keyword
+            })
+        # buku tanpa sinopsis dan keyword
+        buku_query = MasterBuku.query.filter(MasterBuku.judul.ilike(f"%{data['keyword']}%")).outerjoin(SinopsisBuku, MasterBuku.id == SinopsisBuku.master_buku_id).filter(SinopsisBuku.id.is_(None)).all()
+        for b in buku_query:
+            bukuList.append({
+                'id': b.id,
+                'judul': b.judul,
+                'pengarang': b.pengarang,
+                'penerbitan': b.penerbitan,
+                'deskripsi': b.deskripsi,
+                'isbn': b.isbn,
+                'sinopsis': None,
+                'keyword': None
+            })
+        return jsonify({"data":bukuList}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
 
