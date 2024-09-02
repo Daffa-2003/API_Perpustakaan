@@ -7,13 +7,22 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from flask_jwt_extended import create_access_token, JWTManager
+<<<<<<< HEAD
 import subprocess
+=======
+from sqlalchemy import or_
+>>>>>>> 07734eb7023ad30ed3bf7b0325b9616dc8568e37
 
 
 app = Flask(__name__)
 CORS(app)
 
+<<<<<<< HEAD
 url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
+=======
+# url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
+url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
+>>>>>>> 07734eb7023ad30ed3bf7b0325b9616dc8568e37
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 db = SQLAlchemy(app)
@@ -21,6 +30,8 @@ migrate = Migrate(app, db)
 
 UPLOAD_FOLDER = './uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOTOPROFILE = './fotoProfile/'
+app.config['UPLOAD_FOTOPROFILE'] = UPLOAD_FOTOPROFILE
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['JWT_SECRET_KEY'] = 'nalsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
@@ -66,6 +77,8 @@ class User(db.Model):
     username = db.Column(db.String(250), nullable=False) 
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
+    fotoprofile = db.Column(db.String(250), nullable=True)
+    path = db.Column(db.String(250), nullable=True)
     dateTime = db.Column(db.DateTime, nullable=True, default=db.func.now(), onupdate=db.func.now())
     
     def __init__(self, username, email, password) -> None:
@@ -107,9 +120,9 @@ def login():
         user = User.query.filter_by(email=data['email']).first()
         if user is None:
             return jsonify({'message': 'User tidak ditemukan'}), 404
-        if Bcrypt().check_password_hash(user.password, data['password']):
+        if Bcrypt().check_password_hash(user.password, data['password']):   
             access_token = create_access_token(identity=user.id)
-            return jsonify({'access_token': access_token}), 200
+            return jsonify({'access_token': access_token, 'id' : user.id}), 200
         else:
             return jsonify({'message': 'Password salah'}), 400
     except Exception as e:
@@ -133,7 +146,7 @@ def getUser():
     except Exception as e:
         return jsonify({'message': str(e)}), 400
 
-# get login user 
+# get  user 
 @app.route('/api/getUser/<id>', methods=['GET'])
 def getUserLogin(id):
     try:
@@ -143,13 +156,64 @@ def getUserLogin(id):
         return jsonify({
             'id': user.id,
             'username': user.username,
-            'email': user.email
+            'email': user.email,
+            'fotoprofile' : user.fotoprofile,
+            'path' : user.path
         }), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
 
+# edit user by id
+@app.route('/api/editUser/<id>', methods=['PUT'])
+def editUser(id):
+    try:
+        user = User.query.filter_by(id=id).first()
+        if user is None:
+            return jsonify({'message': 'Data tidak ditemukan'}), 404
 
-    
+        # Jika ada file dalam permintaan, tangani sebagai form-data
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOTOPROFILE'], filename))
+                master = {
+                    'username': request.form['username'],
+                    'email': request.form['email'],
+                    'fotoprofile': filename,
+                    'path': f'/fotoProfile/{filename}'
+                }
+                for key, value in master.items():
+                    setattr(user, key, value)
+                db.session.commit()
+                return jsonify({'message': 'Data berhasil diubah'}), 200
+            else:
+                return jsonify({'message': 'File tidak valid'}), 400
+
+        # Jika tidak ada file, harapkan data dalam bentuk JSON
+        elif request.content_type == 'application/json':
+            data = request.get_json()
+            master = {
+                'username': data['username'],
+                'email': data['email']
+            }
+            for key, value in master.items():
+                setattr(user, key, value)
+            db.session.commit()
+            return jsonify({'message': 'Data berhasil diubah'}), 200
+        else:
+            return jsonify({'message': 'Unsupported Media Type'}), 415
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+
+@app.route('/fotoProfile/<filename>', methods=['GET'])
+def get_profile(filename):
+    return send_from_directory(app.config['UPLOAD_FOTOPROFILE'], filename)
+
 # logout
 @app.route('/api/logout', methods=['POST'])
 def logout():
@@ -466,6 +530,42 @@ def run_automation():
         return jsonify({"error": e.stderr}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# search buku by keyword
+@app.route('/api/searchBuku', methods=['POST'])
+def searchBuku():
+    try:
+        data = request.get_json()
+        # sinopsis = SinopsisBuku.query.filter(SinopsisBuku.keyword.like(f"%{keyword['keyword']}%")).all()
+        sinopsis = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), MasterBuku.judul.ilike(f"%{data['keyword']}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()
+        bukuList = []
+        for s in sinopsis:
+           bukuList.append({
+                'id': s.master_buku_id,
+                'judul': s.master_buku_sinopsis.judul,  # Akses melalui backref
+                'pengarang': s.master_buku_sinopsis.pengarang,
+                'penerbitan': s.master_buku_sinopsis.penerbitan,
+                'deskripsi': s.master_buku_sinopsis.deskripsi,
+                'isbn': s.master_buku_sinopsis.isbn,
+                'sinopsis': s.sinopsis,
+                'keyword': s.keyword
+            })
+        # buku tanpa sinopsis dan keyword
+        buku_query = MasterBuku.query.filter(MasterBuku.judul.ilike(f"%{data['keyword']}%")).outerjoin(SinopsisBuku, MasterBuku.id == SinopsisBuku.master_buku_id).filter(SinopsisBuku.id.is_(None)).all()
+        for b in buku_query:
+            bukuList.append({
+                'id': b.id,
+                'judul': b.judul,
+                'pengarang': b.pengarang,
+                'penerbitan': b.penerbitan,
+                'deskripsi': b.deskripsi,
+                'isbn': b.isbn,
+                'sinopsis': None,
+                'keyword': None
+            })
+        return jsonify({"data":bukuList}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
 
 
 if __name__ == '__main__':
