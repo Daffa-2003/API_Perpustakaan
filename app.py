@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from flask_jwt_extended import create_access_token, JWTManager
+import subprocess
 
 
 app = Flask(__name__)
@@ -448,6 +449,23 @@ def editBookSinopsis(id):
         return jsonify({'message': 'Data berhasil diubah'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+    
+@app.route('/api/run-automation', methods=['POST'])
+def run_automation():
+    try:
+        # Path ke file Robot Framework
+        result = subprocess.run(
+            ['robot', r'../../../Robocorp-projects/testing/tasks.robot'], 
+            capture_output=True, 
+            text=True, 
+            check=True,
+            shell=True
+        )
+        return jsonify({"message": "Data berhasil dimasukkan!", "output": result.stdout}), 200
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": e.stderr}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':

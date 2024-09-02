@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.0.1 (Python 3.10.11 on win32)" generated="2024-09-02T12:11:14.368060" rpa="false" schemaversion="5">
+<suite id="s1" name="Tasks" source="D:\projek-otobook\Otobook\API_Perpustakaan\..\..\..\Robocorp-projects\testing\tasks.robot">
+<test id="s1-t1" name="Get JSON Data From API" line="19">
+<kw name="Create Session" owner="RPA.HTTP">
+<msg time="2024-09-02T12:11:16.466294" level="INFO">Creating Session using : alias=mysession, url=http://localhost:5000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>mysession</arg>
+<arg>${API_URL}</arg>
+<arg>verify=${False}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2024-09-02T12:11:16.465293" elapsed="0.001001"/>
+</kw>
+<kw name="GET On Session" owner="RPA.HTTP">
+<msg time="2024-09-02T12:11:18.518361" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>mysession</arg>
+<arg>/api/getBukuSinopsis</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2024-09-02T12:11:16.467295" elapsed="2.051066"/>
+</kw>
+<kw name="Convert To Dictionary">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2024-09-02T12:11:18.558810" level="INFO">${json_data} = {'data': [{'deskripsi': 'ini adalah deskripsi buku api republik', 'id': 15, 'isbn': '875461648673362', 'judul': 'Api Republik', 'keyword': 'buku, api, republik', 'penerbitan': 'Airlangga', 'pengarang'...</msg>
+<var>${json_data}</var>
+<arg>json.loads('''${json_string}''')</arg>
+<arg>json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.521366" elapsed="0.037444"/>
+</kw>
+<return>
+<value>${json_data}</value>
+<status status="PASS" start="2024-09-02T12:11:18.559815" elapsed="0.000000"/>
+</return>
+<msg time="2024-09-02T12:11:18.559815" level="INFO">${json_data} = {'data': [{'deskripsi': 'ini adalah deskripsi buku api republik', 'id': 15, 'isbn': '875461648673362', 'judul': 'Api Republik', 'keyword': 'buku, api, republik', 'penerbitan': 'Airlangga', 'pengarang'...</msg>
+<var>${json_data}</var>
+<arg>${response.content}</arg>
+<status status="PASS" start="2024-09-02T12:11:18.519367" elapsed="0.040448"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Full JSON Response: ${json_data}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.559815" elapsed="0.001165"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2024-09-02T12:11:18.562233" level="INFO">${data_list} = [{'deskripsi': 'ini adalah deskripsi buku api republik', 'id': 15, 'isbn': '875461648673362', 'judul': 'Api Republik', 'keyword': 'buku, api, republik', 'penerbitan': 'Airlangga', 'pengarang': 'Daffa'...</msg>
+<var>${data_list}</var>
+<arg>${json_data}</arg>
+<arg>data</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.560980" elapsed="0.001253"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2024-09-02T12:11:18.562233" level="INFO">Length is 1.</msg>
+<msg time="2024-09-02T12:11:18.562233" level="INFO">${last_index} = 1</msg>
+<var>${last_index}</var>
+<arg>${data_list}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.562233" elapsed="0.000000"/>
+</kw>
+<kw name="Get From List" owner="Collections">
+<msg time="2024-09-02T12:11:18.564756" level="INFO">${last_book} = {'deskripsi': 'ini adalah deskripsi buku api republik', 'id': 15, 'isbn': '875461648673362', 'judul': 'Api Republik', 'keyword': 'buku, api, republik', 'penerbitan': 'Airlangga', 'pengarang': 'Daffa',...</msg>
+<var>${last_book}</var>
+<arg>${data_list}</arg>
+<arg>${last_index - 1}</arg>
+<doc>Returns the value specified with an ``index`` from ``list``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.563527" elapsed="0.001229"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Last book data: ${last_book}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.564756" elapsed="0.001171"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2024-09-02T12:11:18.565927" level="INFO">${JUDUL} = Api Republik</msg>
+<var>${JUDUL}</var>
+<arg>${last_book}</arg>
+<arg>judul</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.565927" elapsed="0.001007"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2024-09-02T12:11:18.566934" level="INFO">${PENGARANG} = Daffa</msg>
+<var>${PENGARANG}</var>
+<arg>${last_book}</arg>
+<arg>pengarang</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.566934" elapsed="0.000000"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2024-09-02T12:11:18.568190" level="INFO">${PENERBITAN} = Airlangga</msg>
+<var>${PENERBITAN}</var>
+<arg>${last_book}</arg>
+<arg>penerbitan</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.566934" elapsed="0.001256"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2024-09-02T12:11:18.568190" level="INFO">${DESC} = ini adalah deskripsi buku api republik</msg>
+<var>${DESC}</var>
+<arg>${last_book}</arg>
+<arg>deskripsi</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.568190" elapsed="0.000000"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<msg time="2024-09-02T12:11:18.569202" level="INFO">${ISBN} = 875461648673362</msg>
+<var>${ISBN}</var>
+<arg>${last_book}</arg>
+<arg>isbn</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.569202" elapsed="0.000000"/>
+</kw>
+<kw name="Open website">
+<kw name="Open Available Browser" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:11:32.142508" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\chromedriver\win64\128.0.6613.86\chromedriver-win32/THIRD_PARTY_NOTICES.chromedriver</msg>
+<msg time="2024-09-02T12:11:32.216740" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
+<msg time="2024-09-02T12:11:32.217741" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<msg time="2024-09-02T12:11:32.310025" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-02T12:11:32.936460" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-02T12:11:40.053594" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\geckodriver\win64\v0.35.0\geckodriver.exe</msg>
+<msg time="2024-09-02T12:11:40.149829" level="INFO">Webdriver version taken into use: geckodriver 0.35.0 (9f0a0036bea4 2024-08-03 07:11 +0000)
+
+The source code of this program is available from
+testing/geckodriver in https://hg.mozilla.org/mozilla-central.
+
+This program is subject to the terms of the Mozilla Public License 2.0.
+You can obtain a copy of the license at https://mozilla.org/MPL/2.0/.
+</msg>
+<msg time="2024-09-02T12:11:40.150830" level="INFO">Creating an instance of the Firefox WebDriver.</msg>
+<msg time="2024-09-02T12:11:58.229838" level="INFO">Created Firefox browser (version 129.0) with arguments: </msg>
+<msg time="2024-09-02T12:11:58.229838" level="INFO" html="true">&lt;p&gt;Attempted combinations:&lt;/p&gt;&lt;div class="doc"&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Browser&lt;/th&gt;&lt;th&gt;Download&lt;/th&gt;&lt;th&gt;Error&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'chromedriver' is not in PATH (with disabled Selenium Manager)
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;[WinError 193] %1 is not a valid Win32 application&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Firefox&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'geckodriver' is not in PATH (with disabled Selenium Manager)
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Firefox&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</msg>
+<msg time="2024-09-02T12:11:58.229838" level="INFO">Opening url 'http://localhost/inlislite3/backend/site/login'</msg>
+<arg>http://localhost/inlislite3/backend/site/login</arg>
+<doc>Attempts to open a browser on the user's device from a set of
+supported browsers. Automatically downloads a corresponding webdriver
+if none is already installed.</doc>
+<status status="PASS" start="2024-09-02T12:11:18.570203" elapsed="47.304694"/>
+</kw>
+<status status="PASS" start="2024-09-02T12:11:18.570203" elapsed="47.304694"/>
+</kw>
+<kw name="Login website">
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:05.878413" level="INFO">Typing text 'inlislite' into text field 'id:loginform-username'.</msg>
+<arg>id:loginform-username</arg>
+<arg>inlislite</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:05.875902" elapsed="0.180643"/>
+</kw>
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:06.058004" level="INFO">Typing text 'inlislite=' into text field 'id:loginform-password'.</msg>
+<arg>id:loginform-password</arg>
+<arg>inlislite=</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:06.056545" elapsed="0.060679"/>
+</kw>
+<kw name="Click Button" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:06.118224" level="INFO">Clicking button 'name:login-button'.</msg>
+<arg>name:login-button</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:06.117224" elapsed="0.262898"/>
+</kw>
+<status status="PASS" start="2024-09-02T12:12:05.875902" elapsed="0.505221"/>
+</kw>
+<kw name="Select Library Location">
+<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<arg>xpath=//span[@id="select2-dynamicmodel-location-container"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2024-09-02T12:12:06.382123" elapsed="2.231310"/>
+</kw>
+<kw name="Click Element" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:08.614443" level="INFO">Clicking element 'xpath=//span[@id="select2-dynamicmodel-location-container"]'.</msg>
+<arg>xpath=//span[@id="select2-dynamicmodel-location-container"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:08.614443" elapsed="0.249904"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<arg>xpath=//li[contains(text(), 'Perpustakaan Pusat')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2024-09-02T12:12:08.865347" elapsed="0.017466"/>
+</kw>
+<kw name="Click Element" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:08.883812" level="INFO">Clicking element 'xpath=//li[contains(text(), 'Perpustakaan Pusat')]'.</msg>
+<arg>xpath=//li[contains(text(), 'Perpustakaan Pusat')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:08.883812" elapsed="0.723995"/>
+</kw>
+<status status="PASS" start="2024-09-02T12:12:06.381123" elapsed="3.226684"/>
+</kw>
+<kw name="Click Submit Button">
+<kw name="Click Button When Visible" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:09.624809" level="INFO">Clicking button '//button[@class="btn btn-primary btn-block btn-flat button_login"]'.</msg>
+<arg>//button[@class="btn btn-primary btn-block btn-flat button_login"]</arg>
+<doc>Click button identified by ``locator``, once it becomes visible.</doc>
+<status status="PASS" start="2024-09-02T12:12:09.609822" elapsed="0.247495"/>
+</kw>
+<status status="PASS" start="2024-09-02T12:12:09.608814" elapsed="0.249769"/>
+</kw>
+<kw name="Navigate to Entri Katalog">
+<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<arg>xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2024-09-02T12:12:09.859591" elapsed="3.965156"/>
+</kw>
+<kw name="Click Element" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:13.825748" level="INFO">Clicking element 'xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]'.</msg>
+<arg>xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:13.825748" elapsed="0.250200"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2024-09-02T12:12:14.075948" elapsed="0.025308"/>
+</kw>
+<kw name="Click Element" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:14.102578" level="INFO">Clicking element 'xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']'.</msg>
+<arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:14.102578" elapsed="2.750357"/>
+</kw>
+<status status="PASS" start="2024-09-02T12:12:09.858583" elapsed="6.994352"/>
+</kw>
+<kw name="Input Book Data">
+<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<arg>id:TagsValue_245</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2024-09-02T12:12:16.854935" elapsed="0.048398"/>
+</kw>
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:16.905334" level="INFO">Typing text 'Api Republik' into text field 'id:TagsValue_245'.</msg>
+<arg>id:TagsValue_245</arg>
+<arg>${judul}</arg>
+<arg>delay=0.5</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:16.904333" elapsed="0.214948"/>
+</kw>
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:17.121293" level="INFO">Typing text 'Daffa' into text field 'id:TagsValue_100'.</msg>
+<arg>id:TagsValue_100</arg>
+<arg>${pengarang}</arg>
+<arg>delay=0.5</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:17.120291" elapsed="0.059907"/>
+</kw>
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:17.182198" level="INFO">Typing text 'Airlangga' into text field 'id:TagsValue_260_0'.</msg>
+<arg>id:TagsValue_260_0</arg>
+<arg>${penerbitan}</arg>
+<arg>delay=0.5</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:17.181198" elapsed="0.046514"/>
+</kw>
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:17.230220" level="INFO">Typing text 'ini adalah deskripsi buku api republik' into text field 'id:TagsValue_500_0'.</msg>
+<arg>id:TagsValue_500_0</arg>
+<arg>${desc}</arg>
+<arg>delay=0.5</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:17.228711" elapsed="0.106206"/>
+</kw>
+<kw name="Input Text" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:17.335918" level="INFO">Typing text '875461648673362' into text field 'id:TagsValue_020_0'.</msg>
+<arg>id:TagsValue_020_0</arg>
+<arg>${isbn}</arg>
+<arg>delay=0.5</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:17.335918" elapsed="0.062981"/>
+</kw>
+<kw name="Click Button" owner="RPA.Browser.Selenium">
+<msg time="2024-09-02T12:12:17.398899" level="INFO">Clicking button 'id:btnSave2'.</msg>
+<arg>id:btnSave2</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2024-09-02T12:12:17.398899" elapsed="0.273013"/>
+</kw>
+<arg>${JUDUL}</arg>
+<arg>${PENGARANG}</arg>
+<arg>${PENERBITAN}</arg>
+<arg>${DESC}</arg>
+<arg>${ISBN}</arg>
+<status status="PASS" start="2024-09-02T12:12:16.853935" elapsed="0.817977"/>
+</kw>
+<status status="PASS" start="2024-09-02T12:11:16.460293" elapsed="61.211619"/>
+</test>
+<status status="PASS" start="2024-09-02T12:11:14.371067" elapsed="63.302233"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Tasks">Tasks</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2024-09-02T12:11:32.216740" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
+<msg time="2024-09-02T12:11:32.310025" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-02T12:11:32.936460" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+</errors>
+</robot>
