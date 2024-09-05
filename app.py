@@ -7,22 +7,16 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from flask_jwt_extended import create_access_token, JWTManager
-<<<<<<< HEAD
 import subprocess
-=======
 from sqlalchemy import or_
->>>>>>> 07734eb7023ad30ed3bf7b0325b9616dc8568e37
 
 
 app = Flask(__name__)
 CORS(app)
 
-<<<<<<< HEAD
 url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
-=======
-# url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
 url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
->>>>>>> 07734eb7023ad30ed3bf7b0325b9616dc8568e37
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 db = SQLAlchemy(app)
@@ -514,12 +508,14 @@ def editBookSinopsis(id):
     except Exception as e:
         return jsonify({'message': str(e)}), 400
     
-@app.route('/api/run-automation', methods=['POST'])
-def run_automation():
+@app.route('/api/run-automation/<id>', methods=['POST'])
+def run_automation(id):
     try:
+        buku = MasterBuku.query.filter_by(id=id).first()
+        book_id = buku.id
         # Path ke file Robot Framework
         result = subprocess.run(
-            ['robot', r'../../../Robocorp-projects/testing/tasks.robot'], 
+            ['robot', '--variable', f'BOOK_ID:{book_id}', r'../../../Robocorp-projects/testing/tasks.robot'], 
             capture_output=True, 
             text=True, 
             check=True,
