@@ -7,14 +7,16 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from flask_jwt_extended import create_access_token, JWTManager
+import subprocess
 from sqlalchemy import or_
 
 
 app = Flask(__name__)
 CORS(app)
 
-# url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
+url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
 url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 db = SQLAlchemy(app)
@@ -505,6 +507,25 @@ def editBookSinopsis(id):
         return jsonify({'message': 'Data berhasil diubah'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+    
+@app.route('/api/run-automation/<id>', methods=['POST'])
+def run_automation(id):
+    try:
+        buku = MasterBuku.query.filter_by(id=id).first()
+        book_id = buku.id
+        # Path ke file Robot Framework
+        result = subprocess.run(
+            ['robot', '--variable', f'BOOK_ID:{book_id}', r'../../../Robocorp-projects/testing/tasks.robot'], 
+            capture_output=True, 
+            text=True, 
+            check=True,
+            shell=True
+        )
+        return jsonify({"message": "Data berhasil dimasukkan!", "output": result.stdout}), 200
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": e.stderr}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # search buku by keyword
 @app.route('/api/searchBuku', methods=['POST'])

@@ -2,6 +2,7 @@ import base64
 import binascii
 import json
 import re
+import sys
 import uuid
 import warnings
 import zlib
@@ -10,7 +11,6 @@ from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncIterator,
     Deque,
     Dict,
     Iterator,
@@ -47,6 +47,13 @@ from .payload import (
     payload_type,
 )
 from .streams import StreamReader
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing import TypeVar
+
+    Self = TypeVar("Self", bound="BodyPartReader")
 
 __all__ = (
     "MultipartReader",
@@ -280,8 +287,8 @@ class BodyPartReader:
         self._content_eof = 0
         self._cache: Dict[str, Any] = {}
 
-    def __aiter__(self) -> AsyncIterator["BodyPartReader"]:
-        return self  # type: ignore[return-value]
+    def __aiter__(self: Self) -> Self:
+        return self
 
     async def __anext__(self) -> bytes:
         part = await self.next()
@@ -322,6 +329,31 @@ class BodyPartReader:
             chunk = await self._read_chunk_from_length(size)
         else:
             chunk = await self._read_chunk_from_stream(size)
+
+        # For the case of base64 data, we must read a fragment of size with a
+        # remainder of 0 by dividing by 4 for string without symbols \n or \r
+        encoding = self.headers.get(CONTENT_TRANSFER_ENCODING)
+        if encoding and encoding.lower() == "base64":
+            stripped_chunk = b"".join(chunk.split())
+            remainder = len(stripped_chunk) % 4
+
+            while remainder != 0 and not self.at_eof():
+                over_chunk_size = 4 - remainder
+                over_chunk = b""
+
+                if self._prev_chunk:
+                    over_chunk = self._prev_chunk[:over_chunk_size]
+                    self._prev_chunk = self._prev_chunk[len(over_chunk) :]
+
+                if len(over_chunk) != over_chunk_size:
+                    over_chunk += await self._content.read(4 - len(over_chunk))
+
+                if not over_chunk:
+                    self._at_eof = True
+
+                stripped_chunk += b"".join(over_chunk.split())
+                chunk += over_chunk
+                remainder = len(stripped_chunk) % 4
 
         self._read_bytes += len(chunk)
         if self._read_bytes == self._length:
@@ -556,7 +588,7 @@ class MultipartReader:
     response_wrapper_cls = MultipartResponseWrapper
     #: Multipart reader class, used to handle multipart/* body parts.
     #: None points to type(self)
-    multipart_reader_cls = None
+    multipart_reader_cls: Optional[Type["MultipartReader"]] = None
     #: Body part reader class for non multipart/* content types.
     part_reader_cls = BodyPartReader
 
@@ -577,10 +609,8 @@ class MultipartReader:
         self._at_bof = True
         self._unread: List[bytes] = []
 
-    def __aiter__(
-        self,
-    ) -> AsyncIterator["BodyPartReader"]:
-        return self  # type: ignore[return-value]
+    def __aiter__(self: Self) -> Self:
+        return self
 
     async def __anext__(
         self,
