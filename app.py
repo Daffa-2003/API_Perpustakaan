@@ -14,7 +14,7 @@ from sqlalchemy import or_
 app = Flask(__name__)
 CORS(app)
 
-url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
+# url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
 url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
 
 
@@ -28,7 +28,7 @@ UPLOAD_FOTOPROFILE = './fotoProfile/'
 app.config['UPLOAD_FOTOPROFILE'] = UPLOAD_FOTOPROFILE
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
 
-app.config['JWT_SECRET_KEY'] = 'nalsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
+app.config['JWT_SECRET_KEY'] = 'naplsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
 jwt = JWTManager(app)
 
 class MasterBuku(db.Model):
