@@ -13,15 +13,8 @@ from sqlalchemy import or_
 
 app = Flask(__name__)
 CORS(app)
-
-<<<<<<< HEAD
 url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
 #url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
-=======
-# password = 'daffa'
-url = f'postgresql://postgres:daffa@localhost/Perpustakaan'
-# url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
->>>>>>> e21ed3122bad9351ab95e31596d9c31cab67f512
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
