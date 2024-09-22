@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
-url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
+#url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
@@ -511,17 +511,29 @@ def editBookSinopsis(id):
 @app.route('/api/run-automation/<id>', methods=['POST'])
 def run_automation(id):
     try:
+        data = request.get_json()
+        ip_address = data.get('ipAddress')
+        
         buku = MasterBuku.query.filter_by(id=id).first()
         book_id = buku.id
+        
+        if ip_address:
+            print(f"Received IP Address: {ip_address}")
+            
         # Path ke file Robot Framework
         result = subprocess.run(
-            ['robot', '--variable', f'BOOK_ID:{book_id}', r'../../../Robocorp-projects/testing/tasks.robot'], 
+            [
+                'robot', 
+                '--variable', f'BOOK_ID:{book_id}', 
+                '--variable', f'IP_ADDRESS:{ip_address}',
+                r'../../../Robocorp-projects/testing/tasks.robot'
+            ], 
             capture_output=True, 
             text=True, 
             check=True,
             shell=True
         )
-        return jsonify({"message": "Data berhasil dimasukkan!", "output": result.stdout}), 200
+        return jsonify({"message": "Data berhasil dimasukkan!"}), 200
     except subprocess.CalledProcessError as e:
         return jsonify({"error": e.stderr}), 500
     except Exception as e:
