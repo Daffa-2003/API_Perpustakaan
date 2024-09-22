@@ -14,8 +14,14 @@ from sqlalchemy import or_
 app = Flask(__name__)
 CORS(app)
 
+<<<<<<< HEAD
 url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
 #url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
+=======
+# password = 'daffa'
+url = f'postgresql://postgres:daffa@localhost/Perpustakaan'
+# url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
+>>>>>>> e21ed3122bad9351ab95e31596d9c31cab67f512
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
@@ -28,7 +34,7 @@ UPLOAD_FOTOPROFILE = './fotoProfile/'
 app.config['UPLOAD_FOTOPROFILE'] = UPLOAD_FOTOPROFILE
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
 
-app.config['JWT_SECRET_KEY'] = 'nalsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
+app.config['JWT_SECRET_KEY'] = 'naplsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
 jwt = JWTManager(app)
 
 class MasterBuku(db.Model):
@@ -38,6 +44,7 @@ class MasterBuku(db.Model):
     penerbitan = db.Column(db.String(250), nullable=False)
     deskripsi = db.Column(db.String(250), nullable=False)
     isbn = db.Column(db.String(100), nullable=False, unique=True)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dateTime = db.Column(db.DateTime, nullable=True, default=db.func.now(), onupdate=db.func.now())
 
     # Menambahkan relasi dengan cascade delete dan nama backref yang unik
@@ -74,6 +81,9 @@ class User(db.Model):
     fotoprofile = db.Column(db.String(250), nullable=True)
     path = db.Column(db.String(250), nullable=True)
     dateTime = db.Column(db.DateTime, nullable=True, default=db.func.now(), onupdate=db.func.now())
+    
+    # menambahkan relasi dengan cascade delete dan nama backref yang unik
+    master_buku = db.relationship('MasterBuku', backref='user', cascade="all, delete-orphan", lazy=True)
     
     def __init__(self, username, email, password) -> None:
         super().__init__()
@@ -220,31 +230,44 @@ def logout():
 ##### BUKU #####
 
 # endpoint untuk menambahkan data buku
-@app.route('/api/addBuku', methods=['POST'])
-def addBuku():
+@app.route('/api/addBuku/<id>', methods=['POST'])
+def addBuku(id):
     try:
         data = request.get_json()
-        # subjek = generate_keywords_openai(data['abstrak'])
-        # abstract = summarization.summarize(data['abstrak'])
+        # user_id = User.query.filter_by(id=id).first()
         buku = MasterBuku(
             judul = data['judul'],
             isbn = data['isbn'],
             pengarang = data['pengarang'],
             penerbitan = data['penerbitan'],
             deskripsi = data['deskripsi'],
-            # abstrak = abstract,
+            userId = id
         )
         db.session.add(buku)
         db.session.commit()
         return jsonify({'message': 'Data berhasil ditambahkan'}),201
     except Exception as e:
-        return jsonify({'message': str(e)}), 400
-
-# get buku 
+        return jsonify({'message': "Data Gagal Dikirim"}), 400
+    
+# get buku sesuai dengan user yang membuat
 @app.route('/api/getBuku', methods=['GET'])
 def getBuku():
     try:
-        buku = MasterBuku.query.all()
+        # Ambil userId dari query parameters
+        user_id = request.args.get('userId')
+
+        # Cek apakah userId diberikan
+        if not user_id:
+            return jsonify({'message': 'userId is required'}), 400
+
+        # Cari buku sesuai dengan userId
+        buku = MasterBuku.query.filter_by(userId=user_id).all()
+
+        # Jika tidak ada buku ditemukan untuk user tersebut
+        if not buku:
+            return jsonify({'message': 'Tidak ada buku '}), 200
+
+        # Buat daftar buku untuk dikembalikan
         bukuList = []
         for b in buku:
             bukuList.append({
@@ -255,7 +278,10 @@ def getBuku():
                 'deskripsi': b.deskripsi,
                 'isbn': b.isbn
             })
-        return jsonify({"data":bukuList}), 200
+
+        # Kembalikan daftar buku dalam format JSON
+        return jsonify({"data": bukuList}), 200
+
     except Exception as e:
         return jsonify({'message': str(e)}), 400
     
