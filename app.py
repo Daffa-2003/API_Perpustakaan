@@ -532,12 +532,11 @@ def run_automation(id):
     try:
         data = request.get_json()
         ip_address = data.get('ipAddress')
+        Username = data.get('username')
+        Password = data.get('password')
         
         buku = MasterBuku.query.filter_by(id=id).first()
         book_id = buku.id
-        
-        if ip_address:
-            print(f"Received IP Address: {ip_address}")
             
         # Path ke file Robot Framework
         result = subprocess.run(
@@ -545,6 +544,8 @@ def run_automation(id):
                 'robot', 
                 '--variable', f'BOOK_ID:{book_id}', 
                 '--variable', f'IP_ADDRESS:{ip_address}',
+                '--variable', f'USERNAME:{Username}',
+                '--variable', f'PASSWORD:{Password}',
                 r'../../../Robocorp-projects/testing/tasks.robot'
             ], 
             capture_output=True, 
@@ -554,7 +555,7 @@ def run_automation(id):
         )
         return jsonify({"message": "Data berhasil dimasukkan!"}), 200
     except subprocess.CalledProcessError as e:
-        return jsonify({"error": e.stderr}), 500
+        return jsonify({"error": "Terdapat enter pada data Buku"}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -1,14 +1,8 @@
-"""Done
+"""done
 
-<<<<<<<< HEAD:migrations/versions/369bd5e7cf54_done.py
-Revision ID: 369bd5e7cf54
+Revision ID: 1a86093ff9d9
 Revises: 
-Create Date: 2024-09-10 13:07:50.335888
-========
-Revision ID: 68b066e2d0cb
-Revises: 
-Create Date: 2024-09-20 15:31:02.903067
->>>>>>>> e21ed3122bad9351ab95e31596d9c31cab67f512:migrations/versions/68b066e2d0cb_done.py
+Create Date: 2024-09-22 17:35:21.162208
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/369bd5e7cf54_done.py
-revision = '369bd5e7cf54'
-========
-revision = '68b066e2d0cb'
->>>>>>>> e21ed3122bad9351ab95e31596d9c31cab67f512:migrations/versions/68b066e2d0cb_done.py
+revision = '1a86093ff9d9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -53,20 +43,6 @@ def upgrade():
     sa.UniqueConstraint('id'),
     sa.UniqueConstraint('isbn')
     )
-<<<<<<<< HEAD:migrations/versions/369bd5e7cf54_done.py
-    op.create_table('user',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('username', sa.String(length=250), nullable=False),
-    sa.Column('email', sa.String(length=250), nullable=False),
-    sa.Column('password', sa.String(length=250), nullable=False),
-    sa.Column('fotoprofile', sa.String(length=250), nullable=True),
-    sa.Column('path', sa.String(length=250), nullable=True),
-    sa.Column('dateTime', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
-    )
-========
->>>>>>>> e21ed3122bad9351ab95e31596d9c31cab67f512:migrations/versions/68b066e2d0cb_done.py
     op.create_table('cover_buku',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('master_buku_id', sa.Integer(), nullable=False),
