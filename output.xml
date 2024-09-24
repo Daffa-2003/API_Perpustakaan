@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.0.1 (Python 3.10.11 on win32)" generated="2024-09-24T15:48:55.649101" rpa="false" schemaversion="5">
+<robot generator="Robot 7.0.1 (Python 3.10.11 on win32)" generated="2024-09-24T17:30:07.200520" rpa="false" schemaversion="5">
 <suite id="s1" name="Tasks" source="D:\projek-otobook\Otobook\API_Perpustakaan\..\..\..\Robocorp-projects\testing\tasks.robot">
 <test id="s1-t1" name="Get JSON Data From API" line="19">
 <kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T15:48:56.592417" level="INFO">${book_id} = 4</msg>
+<msg time="2024-09-24T17:30:09.425133" level="INFO">${book_id} = 5</msg>
 <var>${book_id}</var>
 <arg>${BOOK_ID}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.592417" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.425133" elapsed="0.000000"/>
 </kw>
 <kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T15:48:56.592417" level="INFO">${ip_address} = 192.168.9.62</msg>
+<msg time="2024-09-24T17:30:09.426135" level="INFO">${ip_address} = 192.168.9.62</msg>
 <var>${ip_address}</var>
 <arg>${IP_ADDRESS}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.592417" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.426135" elapsed="0.000000"/>
 </kw>
 <kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T15:48:56.593671" level="INFO">${username} = inlislite</msg>
+<msg time="2024-09-24T17:30:09.427134" level="INFO">${username} = inlislite</msg>
 <var>${username}</var>
 <arg>${USERNAME}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.593671" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.426135" elapsed="0.000999"/>
 </kw>
 <kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T15:48:56.593671" level="INFO">${password} = inlislite=</msg>
+<msg time="2024-09-24T17:30:09.427134" level="INFO">${password} = inlislite=</msg>
 <var>${password}</var>
 <arg>${PASSWORD}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.593671" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.427134" elapsed="0.000000"/>
 </kw>
 <kw name="Create Session" owner="RPA.HTTP">
-<msg time="2024-09-24T15:48:56.594698" level="INFO">Creating Session using : alias=mysession, url=http://192.168.9.62:5000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<msg time="2024-09-24T17:30:09.428135" level="INFO">Creating Session using : alias=mysession, url=http://192.168.9.62:5000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
 <arg>mysession</arg>
 <arg>${API_URL}</arg>
 <arg>verify=${False}</arg>
 <doc>Create Session: create a HTTP session to a server</doc>
-<status status="PASS" start="2024-09-24T15:48:56.593671" elapsed="0.001027"/>
+<status status="PASS" start="2024-09-24T17:30:09.427134" elapsed="0.001001"/>
 </kw>
 <kw name="GET On Session" owner="RPA.HTTP">
-<msg time="2024-09-24T15:48:56.607203" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<msg time="2024-09-24T17:30:09.445142" level="INFO">${response} = &lt;Response [200]&gt;</msg>
 <var>${response}</var>
 <arg>mysession</arg>
 <arg>/api/getBookSinopsis/${book_id}</arg>
 <doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.594698" elapsed="0.012505"/>
+<status status="PASS" start="2024-09-24T17:30:09.429135" elapsed="0.016007"/>
 </kw>
 <kw name="Convert To Dictionary">
 <kw name="Evaluate" owner="BuiltIn">
-<msg time="2024-09-24T15:48:56.609470" level="INFO">${json_data} = {'deskripsi': 'www.penerbitdeepublish.com', 'isbn': '978-623-02-6544-0', 'judul': 'PENGOLAHAN SINYAL WICARA', 'keyword': 'teknologi, inovasi, internet', 'penerbitan': 'PENERBIT DEEPUBLISH', 'pengarang...</msg>
+<msg time="2024-09-24T17:30:09.448140" level="INFO">${json_data} = {'deskripsi': 'For information about special discounts for bulk purchases, please', 'isbn': '978-1-4516-7182-7', 'judul': 'Design to grow : how Coca-Cola learned to combine scale and agility', 'keywor...</msg>
 <var>${json_data}</var>
 <arg>json.loads('''${json_string}''')</arg>
 <arg>json</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.609470" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.447138" elapsed="0.001002"/>
 </kw>
 <return>
 <value>${json_data}</value>
-<status status="PASS" start="2024-09-24T15:48:56.609470" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.448140" elapsed="0.000000"/>
 </return>
-<msg time="2024-09-24T15:48:56.610470" level="INFO">${json_data} = {'deskripsi': 'www.penerbitdeepublish.com', 'isbn': '978-623-02-6544-0', 'judul': 'PENGOLAHAN SINYAL WICARA', 'keyword': 'teknologi, inovasi, internet', 'penerbitan': 'PENERBIT DEEPUBLISH', 'pengarang...</msg>
+<msg time="2024-09-24T17:30:09.448140" level="INFO">${json_data} = {'deskripsi': 'For information about special discounts for bulk purchases, please', 'isbn': '978-1-4516-7182-7', 'judul': 'Design to grow : how Coca-Cola learned to combine scale and agility', 'keywor...</msg>
 <var>${json_data}</var>
 <arg>${response.content}</arg>
-<status status="PASS" start="2024-09-24T15:48:56.607203" elapsed="0.003267"/>
+<status status="PASS" start="2024-09-24T17:30:09.445142" elapsed="0.002998"/>
 </kw>
 <kw name="Log To Console" owner="BuiltIn">
 <arg>Full JSON Response: ${json_data}</arg>
 <doc>Logs the given message to the console.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.610470" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.449139" elapsed="0.000000"/>
 </kw>
 <kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T15:48:56.611546" level="INFO">${JUDUL} = PENGOLAHAN SINYAL WICARA</msg>
+<msg time="2024-09-24T17:30:09.450139" level="INFO">${JUDUL} = Design to grow : how Coca-Cola learned to combine scale and agility</msg>
 <var>${JUDUL}</var>
 <arg>${json_data}</arg>
 <arg>judul</arg>
 <doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.610470" elapsed="0.001076"/>
+<status status="PASS" start="2024-09-24T17:30:09.450139" elapsed="0.000000"/>
 </kw>
 <kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T15:48:56.611546" level="INFO">${PENGARANG} = Tri Budi Santoso &amp; Titon Dutono</msg>
+<msg time="2024-09-24T17:30:09.451139" level="INFO">${PENGARANG} = Butler, David</msg>
 <var>${PENGARANG}</var>
 <arg>${json_data}</arg>
 <arg>pengarang</arg>
 <doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.611546" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.450139" elapsed="0.001000"/>
 </kw>
 <kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T15:48:56.611546" level="INFO">${PENERBITAN} = PENERBIT DEEPUBLISH</msg>
+<msg time="2024-09-24T17:30:09.452139" level="INFO">${PENERBITAN} = David Butler and Linda Tischler</msg>
 <var>${PENERBITAN}</var>
 <arg>${json_data}</arg>
 <arg>penerbitan</arg>
 <doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.611546" elapsed="0.001019"/>
+<status status="PASS" start="2024-09-24T17:30:09.451139" elapsed="0.001000"/>
 </kw>
 <kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T15:48:56.612565" level="INFO">${DESC} = www.penerbitdeepublish.com</msg>
+<msg time="2024-09-24T17:30:09.453140" level="INFO">${DESC} = For information about special discounts for bulk purchases, please</msg>
 <var>${DESC}</var>
 <arg>${json_data}</arg>
 <arg>deskripsi</arg>
 <doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.612565" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.453140" elapsed="0.000000"/>
 </kw>
 <kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T15:48:56.612565" level="INFO">${ISBN} = 978-623-02-6544-0</msg>
+<msg time="2024-09-24T17:30:09.454140" level="INFO">${ISBN} = 978-1-4516-7182-7</msg>
 <var>${ISBN}</var>
 <arg>${json_data}</arg>
 <arg>isbn</arg>
 <doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.612565" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.453140" elapsed="0.001000"/>
 </kw>
 <kw name="Open website">
 <kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T15:48:56.613569" level="INFO">${url} = http://192.168.9.62/inlislite3/backend/site/login</msg>
+<msg time="2024-09-24T17:30:09.455140" level="INFO">${url} = http://192.168.9.62/inlislite3/backend/site/login</msg>
 <var>${url}</var>
 <arg>http://${ip_address}/inlislite3/backend/site/login</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.613569" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:09.455140" elapsed="0.000000"/>
 </kw>
 <kw name="Open Available Browser" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:48:59.316629" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\chromedriver\win64\129.0.6668.58\chromedriver-win32/THIRD_PARTY_NOTICES.chromedriver</msg>
-<msg time="2024-09-24T15:48:59.319327" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
-<msg time="2024-09-24T15:48:59.319327" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
-<msg time="2024-09-24T15:48:59.328496" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
-<msg time="2024-09-24T15:48:59.731166" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
-<msg time="2024-09-24T15:49:01.660680" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\geckodriver\win64\v0.35.0\geckodriver.exe</msg>
-<msg time="2024-09-24T15:49:01.676179" level="INFO">Webdriver version taken into use: geckodriver 0.35.0 (9f0a0036bea4 2024-08-03 07:11 +0000)
+<msg time="2024-09-24T17:30:13.965144" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\chromedriver\win64\129.0.6668.58\chromedriver-win32/THIRD_PARTY_NOTICES.chromedriver</msg>
+<msg time="2024-09-24T17:30:14.012661" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
+<msg time="2024-09-24T17:30:14.013667" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<msg time="2024-09-24T17:30:14.207171" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-24T17:30:14.871281" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-24T17:30:18.559317" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\geckodriver\win64\v0.35.0\geckodriver.exe</msg>
+<msg time="2024-09-24T17:30:18.587860" level="INFO">Webdriver version taken into use: geckodriver 0.35.0 (9f0a0036bea4 2024-08-03 07:11 +0000)
 
 The source code of this program is available from
 testing/geckodriver in https://hg.mozilla.org/mozilla-central.
@@ -132,267 +132,267 @@ testing/geckodriver in https://hg.mozilla.org/mozilla-central.
 This program is subject to the terms of the Mozilla Public License 2.0.
 You can obtain a copy of the license at https://mozilla.org/MPL/2.0/.
 </msg>
-<msg time="2024-09-24T15:49:01.676179" level="INFO">Creating an instance of the Firefox WebDriver.</msg>
-<msg time="2024-09-24T15:49:08.164978" level="INFO">Created Firefox browser (version 130.0) with arguments: </msg>
-<msg time="2024-09-24T15:49:08.164978" level="INFO" html="true">&lt;p&gt;Attempted combinations:&lt;/p&gt;&lt;div class="doc"&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Browser&lt;/th&gt;&lt;th&gt;Download&lt;/th&gt;&lt;th&gt;Error&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'chromedriver' is not in PATH (with disabled Selenium Manager)
+<msg time="2024-09-24T17:30:18.588863" level="INFO">Creating an instance of the Firefox WebDriver.</msg>
+<msg time="2024-09-24T17:30:27.662108" level="INFO">Created Firefox browser (version 130.0) with arguments: </msg>
+<msg time="2024-09-24T17:30:27.662108" level="INFO" html="true">&lt;p&gt;Attempted combinations:&lt;/p&gt;&lt;div class="doc"&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Browser&lt;/th&gt;&lt;th&gt;Download&lt;/th&gt;&lt;th&gt;Error&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'chromedriver' is not in PATH (with disabled Selenium Manager)
 &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;[WinError 193] %1 is not a valid Win32 application&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Firefox&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'geckodriver' is not in PATH (with disabled Selenium Manager)
 &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Firefox&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</msg>
-<msg time="2024-09-24T15:49:08.164978" level="INFO">Opening url 'http://192.168.9.62/inlislite3/backend/site/login'</msg>
+<msg time="2024-09-24T17:30:27.662108" level="INFO">Opening url 'http://192.168.9.62/inlislite3/backend/site/login'</msg>
 <arg>${url}</arg>
 <doc>Attempts to open a browser on the user's device from a set of
 supported browsers. Automatically downloads a corresponding webdriver
 if none is already installed.</doc>
-<status status="PASS" start="2024-09-24T15:48:56.613569" elapsed="12.142507"/>
+<status status="PASS" start="2024-09-24T17:30:09.455140" elapsed="26.685393"/>
 </kw>
 <arg>${ip_address}</arg>
-<status status="PASS" start="2024-09-24T15:48:56.612565" elapsed="12.143511"/>
+<status status="PASS" start="2024-09-24T17:30:09.454140" elapsed="26.686393"/>
 </kw>
 <kw name="Login website">
 <kw name="Input Text" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:08.758526" level="INFO">Typing text 'inlislite' into text field 'id:loginform-username'.</msg>
+<msg time="2024-09-24T17:30:36.145535" level="INFO">Typing text 'inlislite' into text field 'id:loginform-username'.</msg>
 <arg>id:loginform-username</arg>
 <arg>${username}</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:08.757076" elapsed="0.174823"/>
+<status status="PASS" start="2024-09-24T17:30:36.143532" elapsed="0.243624"/>
 </kw>
 <kw name="Input Text" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:08.931899" level="INFO">Typing text 'inlislite=' into text field 'id:loginform-password'.</msg>
+<msg time="2024-09-24T17:30:36.388381" level="INFO">Typing text 'inlislite=' into text field 'id:loginform-password'.</msg>
 <arg>id:loginform-password</arg>
 <arg>${password}</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:08.931899" elapsed="0.022525"/>
+<status status="PASS" start="2024-09-24T17:30:36.388381" elapsed="0.030685"/>
 </kw>
 <kw name="Click Button" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:08.955425" level="INFO">Clicking button 'name:login-button'.</msg>
+<msg time="2024-09-24T17:30:36.420067" level="INFO">Clicking button 'name:login-button'.</msg>
 <arg>name:login-button</arg>
 <doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:08.954424" elapsed="0.249862"/>
+<status status="PASS" start="2024-09-24T17:30:36.419066" elapsed="0.255497"/>
 </kw>
 <arg>${username}</arg>
 <arg>${password}</arg>
-<status status="PASS" start="2024-09-24T15:49:08.757076" elapsed="0.447210"/>
+<status status="PASS" start="2024-09-24T17:30:36.141533" elapsed="0.533030"/>
 </kw>
 <kw name="Select Library Location">
 <kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
 <arg>xpath=//span[@id="select2-dynamicmodel-location-container"]</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:09.205291" elapsed="0.695637"/>
+<status status="PASS" start="2024-09-24T17:30:36.675600" elapsed="2.002192"/>
 </kw>
 <kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:09.901930" level="INFO">Clicking element 'xpath=//span[@id="select2-dynamicmodel-location-container"]'.</msg>
+<msg time="2024-09-24T17:30:38.679828" level="INFO">Clicking element 'xpath=//span[@id="select2-dynamicmodel-location-container"]'.</msg>
 <arg>xpath=//span[@id="select2-dynamicmodel-location-container"]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:09.900928" elapsed="0.225167"/>
+<status status="PASS" start="2024-09-24T17:30:38.678807" elapsed="0.264301"/>
 </kw>
 <kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
 <arg>xpath=//li[contains(text(), 'Perpustakaan Pusat')]</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:10.126602" elapsed="0.011011"/>
+<status status="PASS" start="2024-09-24T17:30:38.944150" elapsed="0.023037"/>
 </kw>
 <kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:10.138616" level="INFO">Clicking element 'xpath=//li[contains(text(), 'Perpustakaan Pusat')]'.</msg>
+<msg time="2024-09-24T17:30:38.968230" level="INFO">Clicking element 'xpath=//li[contains(text(), 'Perpustakaan Pusat')]'.</msg>
 <arg>xpath=//li[contains(text(), 'Perpustakaan Pusat')]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:10.137613" elapsed="0.714557"/>
+<status status="PASS" start="2024-09-24T17:30:38.968230" elapsed="0.722310"/>
 </kw>
-<status status="PASS" start="2024-09-24T15:49:09.205291" elapsed="1.646879"/>
+<status status="PASS" start="2024-09-24T17:30:36.675600" elapsed="3.014940"/>
 </kw>
 <kw name="Click Submit Button">
 <kw name="Click Button When Visible" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:10.862265" level="INFO">Clicking button '//button[@class="btn btn-primary btn-block btn-flat button_login"]'.</msg>
+<msg time="2024-09-24T17:30:39.710104" level="INFO">Clicking button '//button[@class="btn btn-primary btn-block btn-flat button_login"]'.</msg>
 <arg>//button[@class="btn btn-primary btn-block btn-flat button_login"]</arg>
 <doc>Click button identified by ``locator``, once it becomes visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:10.853176" elapsed="0.233252"/>
+<status status="PASS" start="2024-09-24T17:30:39.691540" elapsed="0.262582"/>
 </kw>
-<status status="PASS" start="2024-09-24T15:49:10.853176" elapsed="0.233252"/>
+<status status="PASS" start="2024-09-24T17:30:39.690540" elapsed="0.263582"/>
 </kw>
 <kw name="Navigate to Entri Katalog">
 <kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
 <arg>xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:11.087433" elapsed="0.912105"/>
+<status status="PASS" start="2024-09-24T17:30:39.956122" elapsed="3.788929"/>
 </kw>
 <kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:12.000542" level="INFO">Clicking element 'xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]'.</msg>
+<msg time="2024-09-24T17:30:43.746051" level="INFO">Clicking element 'xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]'.</msg>
 <arg>xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:11.999538" elapsed="0.700919"/>
+<status status="PASS" start="2024-09-24T17:30:43.745051" elapsed="0.291374"/>
 </kw>
 <kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
 <arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:12.700457" elapsed="0.020080"/>
+<status status="PASS" start="2024-09-24T17:30:44.037431" elapsed="0.030496"/>
 </kw>
 <kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:12.721537" level="INFO">Clicking element 'xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']'.</msg>
+<msg time="2024-09-24T17:30:44.069927" level="INFO">Clicking element 'xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']'.</msg>
 <arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:12.720537" elapsed="0.728742"/>
+<status status="PASS" start="2024-09-24T17:30:44.068928" elapsed="2.846113"/>
 </kw>
-<status status="PASS" start="2024-09-24T15:49:11.086428" elapsed="2.362851"/>
+<status status="PASS" start="2024-09-24T17:30:39.955121" elapsed="6.960922"/>
 </kw>
 <kw name="Input Book Data">
 <kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
 <arg>id:TagsValue_245</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.450434" elapsed="0.015603"/>
+<status status="PASS" start="2024-09-24T17:30:46.918043" elapsed="0.088488"/>
 </kw>
 <kw name="Run Keyword And Ignore Error" owner="BuiltIn">
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.467094" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_245').value += `PENGOLAHAN SINYAL WICARA`;
+<msg time="2024-09-24T17:30:47.008538" level="INFO">Executing JavaScript:
+document.getElementById('TagsValue_245').value += `Design to grow : how Coca-Cola learned to combine scale and agility`;
 Without any arguments.</msg>
 <arg>document.getElementById('TagsValue_245').value += `${judul}`;</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.467094" elapsed="0.009349"/>
+<status status="PASS" start="2024-09-24T17:30:47.007537" elapsed="0.025008"/>
 </kw>
 <arg>Execute JavaScript</arg>
 <arg>document.getElementById('TagsValue_245').value += `${judul}`;</arg>
 <doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.466037" elapsed="0.010406"/>
+<status status="PASS" start="2024-09-24T17:30:47.006531" elapsed="0.026839"/>
 </kw>
 <kw name="Run Keyword And Ignore Error" owner="BuiltIn">
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.477500" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_100').value += `Tri Budi Santoso &amp; Titon Dutono`;
+<msg time="2024-09-24T17:30:47.035720" level="INFO">Executing JavaScript:
+document.getElementById('TagsValue_100').value += `Butler, David`;
 Without any arguments.</msg>
 <arg>document.getElementById('TagsValue_100').value += `${pengarang}`;</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.477500" elapsed="0.005634"/>
+<status status="PASS" start="2024-09-24T17:30:47.034712" elapsed="0.007714"/>
 </kw>
 <arg>Execute JavaScript</arg>
 <arg>document.getElementById('TagsValue_100').value += `${pengarang}`;</arg>
 <doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.476443" elapsed="0.006691"/>
+<status status="PASS" start="2024-09-24T17:30:47.033370" elapsed="0.010066"/>
 </kw>
 <kw name="Run Keyword And Ignore Error" owner="BuiltIn">
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.492745" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_260_0').value += `PENERBIT DEEPUBLISH`;
+<msg time="2024-09-24T17:30:47.045749" level="INFO">Executing JavaScript:
+document.getElementById('TagsValue_260_0').value += `David Butler and Linda Tischler`;
 Without any arguments.</msg>
 <arg>document.getElementById('TagsValue_260_0').value += `${penerbitan}`;</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.491739" elapsed="0.014101"/>
+<status status="PASS" start="2024-09-24T17:30:47.044548" elapsed="0.013471"/>
 </kw>
 <arg>Execute JavaScript</arg>
 <arg>document.getElementById('TagsValue_260_0').value += `${penerbitan}`;</arg>
 <doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.490561" elapsed="0.015279"/>
+<status status="PASS" start="2024-09-24T17:30:47.043436" elapsed="0.014583"/>
 </kw>
 <kw name="Run Keyword And Ignore Error" owner="BuiltIn">
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.508313" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_500_0').value += `www.penerbitdeepublish.com`;
+<msg time="2024-09-24T17:30:47.060534" level="INFO">Executing JavaScript:
+document.getElementById('TagsValue_500_0').value += `For information about special discounts for bulk purchases, please`;
 Without any arguments.</msg>
 <arg>document.getElementById('TagsValue_500_0').value += `${desc}`;</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.507308" elapsed="0.004007"/>
+<status status="PASS" start="2024-09-24T17:30:47.060112" elapsed="0.007385"/>
 </kw>
 <arg>Execute JavaScript</arg>
 <arg>document.getElementById('TagsValue_500_0').value += `${desc}`;</arg>
 <doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.507308" elapsed="0.004007"/>
+<status status="PASS" start="2024-09-24T17:30:47.059070" elapsed="0.008835"/>
 </kw>
 <kw name="Run Keyword And Ignore Error" owner="BuiltIn">
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.512314" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_020_0').value += `978-623-02-6544-0`;
+<msg time="2024-09-24T17:30:47.070263" level="INFO">Executing JavaScript:
+document.getElementById('TagsValue_020_0').value += `978-1-4516-7182-7`;
 Without any arguments.</msg>
 <arg>document.getElementById('TagsValue_020_0').value += `${isbn}`;</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.512314" elapsed="0.004001"/>
+<status status="PASS" start="2024-09-24T17:30:47.069255" elapsed="0.007796"/>
 </kw>
 <arg>Execute JavaScript</arg>
 <arg>document.getElementById('TagsValue_020_0').value += `${isbn}`;</arg>
 <doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.512314" elapsed="0.004001"/>
+<status status="PASS" start="2024-09-24T17:30:47.068913" elapsed="0.009145"/>
 </kw>
 <kw name="Click Button" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.517318" level="INFO">Clicking button 'id:btnSave2'.</msg>
+<msg time="2024-09-24T17:30:47.078058" level="INFO">Clicking button 'id:btnSave2'.</msg>
 <arg>id:btnSave2</arg>
 <doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.517318" elapsed="0.250359"/>
+<status status="PASS" start="2024-09-24T17:30:47.078058" elapsed="0.298344"/>
 </kw>
 <arg>${JUDUL}</arg>
 <arg>${PENGARANG}</arg>
 <arg>${PENERBITAN}</arg>
 <arg>${DESC}</arg>
 <arg>${ISBN}</arg>
-<status status="PASS" start="2024-09-24T15:49:13.449279" elapsed="0.318398"/>
+<status status="PASS" start="2024-09-24T17:30:46.917043" elapsed="0.460357"/>
 </kw>
 <kw name="Logout Website">
 <kw name="Wait Until Element Is Not Visible" owner="RPA.Browser.Selenium">
 <arg>css=div.modal-backdrop</arg>
 <arg>timeout=30s</arg>
 <doc>Waits until the element ``locator`` is not visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.769680" elapsed="0.228837"/>
+<status status="PASS" start="2024-09-24T17:30:47.379401" elapsed="0.484575"/>
 </kw>
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:13.999522" level="INFO">Executing JavaScript:
+<msg time="2024-09-24T17:30:47.865980" level="INFO">Executing JavaScript:
 swal.close();
 Without any arguments.</msg>
 <arg>swal.close();</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:13.998517" elapsed="0.008337"/>
+<status status="PASS" start="2024-09-24T17:30:47.864980" elapsed="0.009998"/>
 </kw>
 <kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
 <arg>xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]</arg>
 <arg>timeout=30s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T15:49:14.006854" elapsed="0.009353"/>
+<status status="PASS" start="2024-09-24T17:30:47.875979" elapsed="0.019786"/>
 </kw>
 <kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:14.017214" level="INFO">Clicking element 'xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]'.</msg>
+<msg time="2024-09-24T17:30:47.896773" level="INFO">Clicking element 'xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]'.</msg>
 <arg>xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T15:49:14.017214" elapsed="1.747354"/>
+<status status="PASS" start="2024-09-24T17:30:47.896773" elapsed="5.256226"/>
 </kw>
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:15.765572" level="INFO">Executing JavaScript:
+<msg time="2024-09-24T17:30:53.155004" level="INFO">Executing JavaScript:
 return document.querySelector("a[href='/inlislite3/backend/site/logout']");
 Without any arguments.</msg>
-<msg time="2024-09-24T15:49:15.774735" level="INFO">${logout_element} = &lt;selenium.webdriver.remote.webelement.WebElement (session="041550ec-0af4-414d-9819-6ecb527a8c90", element="2b541a2a-1b62-46c8-ae5e-aa332a33b9e0")&gt;</msg>
+<msg time="2024-09-24T17:30:53.185238" level="INFO">${logout_element} = &lt;selenium.webdriver.remote.webelement.WebElement (session="20719870-56b4-4a0c-b84f-667dd476fb33", element="b6a40a1a-5497-44e9-b42a-80f56ed4717b")&gt;</msg>
 <var>${logout_element}</var>
 <arg>return document.querySelector("a[href='/inlislite3/backend/site/logout']");</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:15.764568" elapsed="0.010167"/>
+<status status="PASS" start="2024-09-24T17:30:53.154002" elapsed="0.031236"/>
 </kw>
 <if>
 <branch type="IF" condition="'${logout_element}' == None">
 <kw name="Fail" owner="BuiltIn">
 <arg>Logout link not found in the DOM</arg>
 <doc>Fails the test with the given message and optionally alters its tags.</doc>
-<status status="NOT RUN" start="2024-09-24T15:49:15.775743" elapsed="0.000000"/>
+<status status="NOT RUN" start="2024-09-24T17:30:53.186239" elapsed="0.000000"/>
 </kw>
-<status status="NOT RUN" start="2024-09-24T15:49:15.775743" elapsed="0.000000"/>
+<status status="NOT RUN" start="2024-09-24T17:30:53.185238" elapsed="0.002001"/>
 </branch>
-<status status="PASS" start="2024-09-24T15:49:15.775743" elapsed="0.000000"/>
+<status status="PASS" start="2024-09-24T17:30:53.185238" elapsed="0.002001"/>
 </if>
 <kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T15:49:15.776929" level="INFO">Executing JavaScript:
+<msg time="2024-09-24T17:30:53.188239" level="INFO">Executing JavaScript:
 document.querySelector("a[href='/inlislite3/backend/site/logout']").click();
 Without any arguments.</msg>
 <arg>document.querySelector("a[href='/inlislite3/backend/site/logout']").click();</arg>
 <doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T15:49:15.775743" elapsed="0.030829"/>
+<status status="PASS" start="2024-09-24T17:30:53.187239" elapsed="0.032596"/>
 </kw>
-<status status="PASS" start="2024-09-24T15:49:13.768680" elapsed="2.039141"/>
+<status status="PASS" start="2024-09-24T17:30:47.378401" elapsed="5.842433"/>
 </kw>
 <kw name="Close Browser">
 <kw name="Close All Browsers" owner="RPA.Browser.Selenium">
 <doc>Closes all open browsers and resets the browser cache.</doc>
-<status status="PASS" start="2024-09-24T15:49:15.807821" elapsed="2.740812"/>
+<status status="PASS" start="2024-09-24T17:30:53.222835" elapsed="3.654779"/>
 </kw>
-<status status="PASS" start="2024-09-24T15:49:15.807821" elapsed="2.740812"/>
+<status status="PASS" start="2024-09-24T17:30:53.220834" elapsed="3.656780"/>
 </kw>
-<status status="PASS" start="2024-09-24T15:48:56.589950" elapsed="21.958683"/>
+<status status="PASS" start="2024-09-24T17:30:09.421135" elapsed="47.457479"/>
 </test>
-<status status="PASS" start="2024-09-24T15:48:55.651608" elapsed="22.898028"/>
+<status status="PASS" start="2024-09-24T17:30:07.203521" elapsed="49.676096"/>
 </suite>
 <statistics>
 <total>
@@ -405,8 +405,8 @@ Without any arguments.</msg>
 </suite>
 </statistics>
 <errors>
-<msg time="2024-09-24T15:48:59.319327" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
-<msg time="2024-09-24T15:48:59.328496" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
-<msg time="2024-09-24T15:48:59.731166" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-24T17:30:14.012661" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
+<msg time="2024-09-24T17:30:14.207171" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg time="2024-09-24T17:30:14.871281" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
 </errors>
 </robot>
