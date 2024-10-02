@@ -244,6 +244,9 @@ def addBuku(id):
             ilustrator = ilustrator,
             userId = id
         )
+        isbn = MasterBuku.query.filter_by(isbn=data['isbn']).first()
+        if isbn:
+            return jsonify({'message': 'ISBN sudah terdaftar'}), 400
         db.session.add(buku)
         db.session.commit()
         return jsonify({'message': 'Data berhasil ditambahkan'}),201
@@ -515,7 +518,7 @@ def getBookSinopsis(id):
             'deskripsi': buku.deskripsi,
             'isbn': buku.isbn,
             'kota' : buku.kota,
-            'tahun_terbit' : buku.tahun_terbit,
+            'tahun' : buku.tahun_terbit,
             'editor' : buku.editor,
             'ilustrator' : buku.ilustrator,
             'sinopsis': sinopsis.sinopsis,
@@ -530,24 +533,34 @@ def getBookSinopsis(id):
 def editBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
+        if not buku:
+            return jsonify({'message' : 'Buku tidak di temukan'})
         data = request.get_json()
+        
+         # Cek apakah ISBN yang baru sudah ada di database (kecuali untuk buku yang sedang di-update)
+        isbn_exists = MasterBuku.query.filter(MasterBuku.isbn == data['isbn'], MasterBuku.id != id).first()
+        if isbn_exists:
+            return jsonify({'message': 'ISBN sudah terdaftar'}), 400
+        
         books = {
-            'judul': data['judul'],
-            'pengarang': data['pengarang'],
-            'penerbitan': data['penerbitan'],
-            'deskripsi': data['deskripsi'],
-            'isbn': data['isbn'],
-            'kota' : data['kota'],
-            'tahun_terbit' : data['tahun_terbit'],
-            'editor' : data['editor'],
-            'ilustrator' : data['ilustrator']
+            'judul': data.get('judul'),
+            'pengarang': data.get('pengarang'),
+            'penerbitan': data.get('penerbitan'),
+            'deskripsi': data.get('deskripsi'),
+            'isbn': data.get('isbn'),
+            'kota' : data.get('kota'),
+            'tahun_terbit' : data.get('tahun_terbit'),
+            'editor' : data.get('editor'),
+            'ilustrator' : data.get('ilustrator'),
         }
         for key, value in books.items():
             setattr(buku, key , value)
         sinopsis = SinopsisBuku.query.filter_by(master_buku_id=id).first()
+        if not sinopsis:
+            return jsonify({'message' : 'sinopsis tidak di temukan'})
         sinops = {
-            'sinopsis': data['sinopsis'],
-            'keyword': data['keyword']
+            'sinopsis': data.get('sinopsis'),
+            'keyword': data.get('keyword')
         }
         for key, value in sinops.items():
             setattr(sinopsis, key, value)
