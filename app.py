@@ -531,9 +531,9 @@ def editBookSinopsis(id):
 def run_automation(id):
     try:
         data = request.get_json()
-        ip_address = data.get('ipAddress')
-        Username = data.get('username')
-        Password = data.get('password')
+        # ip_address = data.get('ipAddress')
+        # Username = data.get('username')
+        # Password = data.get('password')
         
         buku = MasterBuku.query.filter_by(id=id).first()
         book_id = buku.id
@@ -543,9 +543,9 @@ def run_automation(id):
             [
                 'robot', 
                 '--variable', f'BOOK_ID:{book_id}', 
-                '--variable', f'IP_ADDRESS:{ip_address}',
-                '--variable', f'USERNAME:{Username}',
-                '--variable', f'PASSWORD:{Password}',
+                # '--variable', f'IP_ADDRESS:{ip_address}',
+                # '--variable', f'USERNAME:{Username}',
+                # '--variable', f'PASSWORD:{Password}',
                 r'../../../Robocorp-projects/testing/tasks.robot'
             ], 
             capture_output=True, 
