@@ -13,7 +13,8 @@ from sqlalchemy import or_
 
 app = Flask(__name__)
 CORS(app)
-url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
+url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
+# url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
 #url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
 
 
@@ -38,10 +39,6 @@ class MasterBuku(db.Model):
     deskripsi = db.Column(db.String(250), nullable=False)
     isbn = db.Column(db.String(100), nullable=False, unique=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    kota = db.Column(db.String(250), nullable=False)
-    tahun_terbit = db.Column(db.String(250), nullable=False)
-    editor = db.Column(db.String(250), nullable=False)
-    ilustrator = db.Column(db.String(250), nullable=True)
     dateTime = db.Column(db.DateTime, nullable=True, default=db.func.now(), onupdate=db.func.now())
 
     # Menambahkan relasi dengan cascade delete dan nama backref yang unik
@@ -129,6 +126,8 @@ def login():
     except Exception as e:
         return jsonify({'message': str(e)}), 400
     
+
+    
 # get user
 @app.route('/api/getUser', methods=['GET'])
 def getUser():
@@ -173,7 +172,6 @@ def editUser(id):
         # Jika ada file dalam permintaan, tangani sebagai form-data
         if 'file' in request.files:
             file = request.files['file']
-            print(f"file diterima: {file}")
             if file.filename == '':
                 return jsonify({'message': 'No selected file'}), 400
             if file and allowed_file(file.filename):
@@ -231,27 +229,19 @@ def addBuku(id):
     try:
         data = request.get_json()
         # user_id = User.query.filter_by(id=id).first()
-        ilustrator = data.get('ilustrator', None)
         buku = MasterBuku(
             judul = data['judul'],
             isbn = data['isbn'],
             pengarang = data['pengarang'],
             penerbitan = data['penerbitan'],
             deskripsi = data['deskripsi'],
-            kota = data['kota'],
-            tahun_terbit = data['tahun'],
-            editor = data['editor'],
-            ilustrator = ilustrator,
             userId = id
         )
-        isbn = MasterBuku.query.filter_by(isbn=data['isbn']).first()
-        if isbn:
-            return jsonify({'message': 'ISBN sudah terdaftar'}), 400
         db.session.add(buku)
         db.session.commit()
         return jsonify({'message': 'Data berhasil ditambahkan'}),201
     except Exception as e:
-        return jsonify({'message': e}), 400
+        return jsonify({'message': "Data Gagal Dikirim"}), 400
     
 # get buku sesuai dengan user yang membuat
 @app.route('/api/getBuku', methods=['GET'])
@@ -280,12 +270,9 @@ def getBuku():
                 'pengarang': b.pengarang,
                 'penerbitan': b.penerbitan,
                 'deskripsi': b.deskripsi,
-                'isbn': b.isbn,
-                'kota' : b.kota,
-                'tahun_terbit' : b.tahun_terbit,
-                'editor' : b.editor,
-                'ilustrator' : b.ilustrator
+                'isbn': b.isbn
             })
+
         # Kembalikan daftar buku dalam format JSON
         return jsonify({"data": bukuList}), 200
 
@@ -310,10 +297,6 @@ def getBukuSinopsis():
                         'penerbitan': b.penerbitan,
                         'deskripsi': b.deskripsi,
                         'isbn': b.isbn,
-                        'kota' : b.kota,
-                        'tahun_terbit' : b.tahun_terbit,
-                        'editor' : b.editor,
-                        'ilustrator' : b.ilustrator,
                         'sinopsis': s.sinopsis,
                         'keyword': s.keyword
                     })
@@ -334,11 +317,7 @@ def getBukuById(id):
         'pengarang': buku.pengarang,
         'penerbitan': buku.penerbitan,
         'deskripsi': buku.deskripsi,
-        'isbn': buku.isbn,
-        'kota' : buku.kota,
-        'tahun' : buku.tahun_terbit,
-        'editor' : buku.editor,
-        'ilustrator' : buku.ilustrator
+        'isbn': buku.isbn
     }), 200
 
 # edit buku by id
@@ -354,11 +333,9 @@ def editBuku(id):
             'pengarang': data['pengarang'],
             'penerbitan': data['penerbitan'],
             'deskripsi': data['deskripsi'],
+            'abstrak': data['abstrak'],
             'isbn': data['isbn'],
-            'kota' : data['kota'],
-            'tahun_terbit' : data['tahun_terbit'],
-            'editor' : data['editor'],
-            'ilustrator' : data['ilustrator']
+            'subjek': data['subjek']
         }
         for key, value in master.items():
             setattr(buku, key, value)
@@ -517,10 +494,6 @@ def getBookSinopsis(id):
             'penerbitan': buku.penerbitan,
             'deskripsi': buku.deskripsi,
             'isbn': buku.isbn,
-            'kota' : buku.kota,
-            'tahun' : buku.tahun_terbit,
-            'editor' : buku.editor,
-            'ilustrator' : buku.ilustrator,
             'sinopsis': sinopsis.sinopsis,
             'keyword': sinopsis.keyword
         }), 200
@@ -533,34 +506,20 @@ def getBookSinopsis(id):
 def editBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
-        if not buku:
-            return jsonify({'message' : 'Buku tidak di temukan'})
         data = request.get_json()
-        
-         # Cek apakah ISBN yang baru sudah ada di database (kecuali untuk buku yang sedang di-update)
-        isbn_exists = MasterBuku.query.filter(MasterBuku.isbn == data['isbn'], MasterBuku.id != id).first()
-        if isbn_exists:
-            return jsonify({'message': 'ISBN sudah terdaftar'}), 400
-        
         books = {
-            'judul': data.get('judul'),
-            'pengarang': data.get('pengarang'),
-            'penerbitan': data.get('penerbitan'),
-            'deskripsi': data.get('deskripsi'),
-            'isbn': data.get('isbn'),
-            'kota' : data.get('kota'),
-            'tahun_terbit' : data.get('tahun_terbit'),
-            'editor' : data.get('editor'),
-            'ilustrator' : data.get('ilustrator'),
+            'judul': data['judul'],
+            'pengarang': data['pengarang'],
+            'penerbitan': data['penerbitan'],
+            'deskripsi': data['deskripsi'],
+            'isbn': data['isbn']
         }
         for key, value in books.items():
             setattr(buku, key , value)
         sinopsis = SinopsisBuku.query.filter_by(master_buku_id=id).first()
-        if not sinopsis:
-            return jsonify({'message' : 'sinopsis tidak di temukan'})
         sinops = {
-            'sinopsis': data.get('sinopsis'),
-            'keyword': data.get('keyword')
+            'sinopsis': data['sinopsis'],
+            'keyword': data['keyword']
         }
         for key, value in sinops.items():
             setattr(sinopsis, key, value)
@@ -588,7 +547,7 @@ def run_automation(id):
                 # '--variable', f'IP_ADDRESS:{ip_address}',
                 # '--variable', f'USERNAME:{Username}',
                 # '--variable', f'PASSWORD:{Password}',
-                r'../../../Robocorp-projects/testing/tasks.robot'
+                r'../../../otomatisasi-inlis/tasks.robot'
             ], 
             capture_output=True, 
             text=True, 
@@ -597,7 +556,7 @@ def run_automation(id):
         )
         return jsonify({"message": "Data berhasil dimasukkan!"}), 200
     except subprocess.CalledProcessError as e:
-        return jsonify({"error": "Terdapat enter pada data Buku"}), 500
+        return jsonify({"error": "Terdapat kesalahan pada server"}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -617,10 +576,6 @@ def searchBuku():
                 'penerbitan': s.master_buku_sinopsis.penerbitan,
                 'deskripsi': s.master_buku_sinopsis.deskripsi,
                 'isbn': s.master_buku_sinopsis.isbn,
-                'kota' : s.master_buku_sinopsis.kota,
-                'tahun_terbit' : s.master_buku_sinopsis.tahun_terbit,
-                'editor' : s.master_buku_sinopsis.editor,
-                'ilustrator' : s.master_buku_sinopsis.ilustrator,
                 'sinopsis': s.sinopsis,
                 'keyword': s.keyword
             })
@@ -634,10 +589,6 @@ def searchBuku():
                 'penerbitan': b.penerbitan,
                 'deskripsi': b.deskripsi,
                 'isbn': b.isbn,
-                'kota' : b.kota,
-                'tahun_terbit' : b.tahun_terbit,
-                'editor' : b.editor,
-                'ilustrator' : b.ilustrator,
                 'sinopsis': None,
                 'keyword': None
             })
