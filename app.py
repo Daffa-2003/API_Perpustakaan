@@ -554,9 +554,14 @@ def run_automation(id):
             check=True,
             shell=True
         )
-        return jsonify({"message": "Data berhasil dimasukkan!"}), 200
+        stdout_log = result.stdout
+        stderr_log = result.stderr
+
+        return jsonify({"message": "Data berhasil dimasukkan!", "stdout": stdout_log, "stderr": stderr_log}), 200
+
     except subprocess.CalledProcessError as e:
-        return jsonify({"error": "Terdapat kesalahan pada server"}), 500
+        # Tampilkan pesan error dari subprocess
+        return jsonify({"error": f"Subprocess error: {str(e)}", "stderr": e.stderr}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
