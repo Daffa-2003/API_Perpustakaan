@@ -1,412 +1,437 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.0.1 (Python 3.10.11 on win32)" generated="2024-09-24T17:30:07.200520" rpa="false" schemaversion="5">
-<suite id="s1" name="Tasks" source="D:\projek-otobook\Otobook\API_Perpustakaan\..\..\..\Robocorp-projects\testing\tasks.robot">
-<test id="s1-t1" name="Get JSON Data From API" line="19">
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T17:30:09.425133" level="INFO">${book_id} = 5</msg>
+<robot generator="Robot 6.1.1 (Python 3.10.11 on win32)" generated="20241111 16:41:38.526" rpa="false" schemaversion="4">
+<suite id="s1" name="Tasks" source="D:\otomatisasi-inlis\tasks.robot">
+<test id="s1-t1" name="Get JSON Data From API" line="27">
+<kw name="Set Variable" library="BuiltIn">
 <var>${book_id}</var>
 <arg>${BOOK_ID}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.425133" elapsed="0.000000"/>
+<msg timestamp="20241111 16:41:39.137" level="INFO">${book_id} = 1</msg>
+<status status="PASS" starttime="20241111 16:41:39.135" endtime="20241111 16:41:39.137"/>
 </kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T17:30:09.426135" level="INFO">${ip_address} = 192.168.9.62</msg>
-<var>${ip_address}</var>
-<arg>${IP_ADDRESS}</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.426135" elapsed="0.000000"/>
-</kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T17:30:09.427134" level="INFO">${username} = inlislite</msg>
-<var>${username}</var>
-<arg>${USERNAME}</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.426135" elapsed="0.000999"/>
-</kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T17:30:09.427134" level="INFO">${password} = inlislite=</msg>
-<var>${password}</var>
-<arg>${PASSWORD}</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.427134" elapsed="0.000000"/>
-</kw>
-<kw name="Create Session" owner="RPA.HTTP">
-<msg time="2024-09-24T17:30:09.428135" level="INFO">Creating Session using : alias=mysession, url=http://192.168.9.62:5000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<kw name="Create Session" library="RPA.HTTP">
 <arg>mysession</arg>
-<arg>${API_URL}</arg>
+<arg>${BASE_API_URL}</arg>
 <arg>verify=${False}</arg>
 <doc>Create Session: create a HTTP session to a server</doc>
-<status status="PASS" start="2024-09-24T17:30:09.427134" elapsed="0.001001"/>
+<msg timestamp="20241111 16:41:39.137" level="INFO">Creating Session using : alias=mysession, url=http://192.168.9.133:5000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20241111 16:41:39.137" endtime="20241111 16:41:39.137"/>
 </kw>
-<kw name="GET On Session" owner="RPA.HTTP">
-<msg time="2024-09-24T17:30:09.445142" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<kw name="GET On Session" library="RPA.HTTP">
 <var>${response}</var>
 <arg>mysession</arg>
 <arg>/api/getBookSinopsis/${book_id}</arg>
 <doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.429135" elapsed="0.016007"/>
+<msg timestamp="20241111 16:42:00.169" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD45B0&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/getBookSinopsis/1</msg>
+<msg timestamp="20241111 16:42:21.423" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD4820&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/getBookSinopsis/1</msg>
+<msg timestamp="20241111 16:42:42.873" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD4940&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/getBookSinopsis/1</msg>
+<msg timestamp="20241111 16:43:03.904" level="FAIL">ConnectTimeout: HTTPConnectionPool(host='192.168.9.133', port=5000): Max retries exceeded with url: /api/getBookSinopsis/1 (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD4AC0&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)'))</msg>
+<status status="FAIL" starttime="20241111 16:41:39.137" endtime="20241111 16:43:03.910"/>
+</kw>
+<kw name="Decode Bytes To String" library="String">
+<var>${response_str}</var>
+<arg>${response.content}</arg>
+<arg>encoding=UTF-8</arg>
+<doc>Decodes the given ``bytes`` to a Unicode string using the given ``encoding``.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.910" endtime="20241111 16:43:03.910"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>Raw Response: ${response_str}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.910" endtime="20241111 16:43:03.910"/>
+</kw>
+<kw name="Replace String" library="String">
+<var>${clean_response}</var>
+<arg>${response_str}</arg>
+<arg>"</arg>
+<arg>\\"</arg>
+<doc>Replaces ``search_for`` in the given ``string`` with ``replace_with``.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.911" endtime="20241111 16:43:03.911"/>
+</kw>
+<kw name="Replace String" library="String">
+<var>${clean_response}</var>
+<arg>${clean_response}</arg>
+<arg>\n</arg>
+<arg>\\n</arg>
+<doc>Replaces ``search_for`` in the given ``string`` with ``replace_with``.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.911" endtime="20241111 16:43:03.911"/>
+</kw>
+<kw name="Replace String" library="String">
+<var>${clean_response}</var>
+<arg>${clean_response}</arg>
+<arg>\r</arg>
+<arg>\\r</arg>
+<doc>Replaces ``search_for`` in the given ``string`` with ``replace_with``.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.911" endtime="20241111 16:43:03.911"/>
+</kw>
+<kw name="Strip String" library="String">
+<var>${clean_response}</var>
+<arg>${clean_response}</arg>
+<doc>Remove leading and/or trailing whitespaces from the given string.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.911" endtime="20241111 16:43:03.911"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>Cleaned Response: ${clean_response}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.911" endtime="20241111 16:43:03.911"/>
 </kw>
 <kw name="Convert To Dictionary">
-<kw name="Evaluate" owner="BuiltIn">
-<msg time="2024-09-24T17:30:09.448140" level="INFO">${json_data} = {'deskripsi': 'For information about special discounts for bulk purchases, please', 'isbn': '978-1-4516-7182-7', 'judul': 'Design to grow : how Coca-Cola learned to combine scale and agility', 'keywor...</msg>
 <var>${json_data}</var>
-<arg>json.loads('''${json_string}''')</arg>
-<arg>json</arg>
-<doc>Evaluates the given expression in Python and returns the result.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.447138" elapsed="0.001002"/>
+<arg>${clean_response}</arg>
+<status status="NOT RUN" starttime="20241111 16:43:03.912" endtime="20241111 16:43:03.912"/>
 </kw>
-<return>
-<value>${json_data}</value>
-<status status="PASS" start="2024-09-24T17:30:09.448140" elapsed="0.000000"/>
-</return>
-<msg time="2024-09-24T17:30:09.448140" level="INFO">${json_data} = {'deskripsi': 'For information about special discounts for bulk purchases, please', 'isbn': '978-1-4516-7182-7', 'judul': 'Design to grow : how Coca-Cola learned to combine scale and agility', 'keywor...</msg>
-<var>${json_data}</var>
-<arg>${response.content}</arg>
-<status status="PASS" start="2024-09-24T17:30:09.445142" elapsed="0.002998"/>
-</kw>
-<kw name="Log To Console" owner="BuiltIn">
+<kw name="Log To Console" library="BuiltIn">
 <arg>Full JSON Response: ${json_data}</arg>
 <doc>Logs the given message to the console.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.449139" elapsed="0.000000"/>
+<status status="NOT RUN" starttime="20241111 16:43:03.912" endtime="20241111 16:43:03.912"/>
 </kw>
-<kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T17:30:09.450139" level="INFO">${JUDUL} = Design to grow : how Coca-Cola learned to combine scale and agility</msg>
-<var>${JUDUL}</var>
-<arg>${json_data}</arg>
-<arg>judul</arg>
-<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.450139" elapsed="0.000000"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${JUDUL}</arg>
+<arg>${json_data['judul']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.912" endtime="20241111 16:43:03.912"/>
 </kw>
-<kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T17:30:09.451139" level="INFO">${PENGARANG} = Butler, David</msg>
-<var>${PENGARANG}</var>
-<arg>${json_data}</arg>
-<arg>pengarang</arg>
-<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.450139" elapsed="0.001000"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${PENGARANG}</arg>
+<arg>${json_data['pengarang']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.912" endtime="20241111 16:43:03.912"/>
 </kw>
-<kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T17:30:09.452139" level="INFO">${PENERBITAN} = David Butler and Linda Tischler</msg>
-<var>${PENERBITAN}</var>
-<arg>${json_data}</arg>
-<arg>penerbitan</arg>
-<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.451139" elapsed="0.001000"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${PENERBITAN}</arg>
+<arg>${json_data['penerbitan']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.913" endtime="20241111 16:43:03.913"/>
 </kw>
-<kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T17:30:09.453140" level="INFO">${DESC} = For information about special discounts for bulk purchases, please</msg>
-<var>${DESC}</var>
-<arg>${json_data}</arg>
-<arg>deskripsi</arg>
-<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.453140" elapsed="0.000000"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${DESC}</arg>
+<arg>${json_data['deskripsi']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.913" endtime="20241111 16:43:03.913"/>
 </kw>
-<kw name="Get From Dictionary" owner="Collections">
-<msg time="2024-09-24T17:30:09.454140" level="INFO">${ISBN} = 978-1-4516-7182-7</msg>
-<var>${ISBN}</var>
-<arg>${json_data}</arg>
-<arg>isbn</arg>
-<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.453140" elapsed="0.001000"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${ISBN}</arg>
+<arg>${json_data['isbn']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.913" endtime="20241111 16:43:03.913"/>
 </kw>
-<kw name="Open website">
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2024-09-24T17:30:09.455140" level="INFO">${url} = http://192.168.9.62/inlislite3/backend/site/login</msg>
-<var>${url}</var>
-<arg>http://${ip_address}/inlislite3/backend/site/login</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.455140" elapsed="0.000000"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${KOTA}</arg>
+<arg>${json_data['kota']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.913" endtime="20241111 16:43:03.913"/>
 </kw>
-<kw name="Open Available Browser" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:13.965144" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\chromedriver\win64\129.0.6668.58\chromedriver-win32/THIRD_PARTY_NOTICES.chromedriver</msg>
-<msg time="2024-09-24T17:30:14.012661" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
-<msg time="2024-09-24T17:30:14.013667" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
-<msg time="2024-09-24T17:30:14.207171" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
-<msg time="2024-09-24T17:30:14.871281" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
-<msg time="2024-09-24T17:30:18.559317" level="INFO">Downloaded webdriver to: C:\Users\dafiq\AppData\Local\robocorp\webdrivers\.wdm\drivers\geckodriver\win64\v0.35.0\geckodriver.exe</msg>
-<msg time="2024-09-24T17:30:18.587860" level="INFO">Webdriver version taken into use: geckodriver 0.35.0 (9f0a0036bea4 2024-08-03 07:11 +0000)
-
-The source code of this program is available from
-testing/geckodriver in https://hg.mozilla.org/mozilla-central.
-
-This program is subject to the terms of the Mozilla Public License 2.0.
-You can obtain a copy of the license at https://mozilla.org/MPL/2.0/.
-</msg>
-<msg time="2024-09-24T17:30:18.588863" level="INFO">Creating an instance of the Firefox WebDriver.</msg>
-<msg time="2024-09-24T17:30:27.662108" level="INFO">Created Firefox browser (version 130.0) with arguments: </msg>
-<msg time="2024-09-24T17:30:27.662108" level="INFO" html="true">&lt;p&gt;Attempted combinations:&lt;/p&gt;&lt;div class="doc"&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Browser&lt;/th&gt;&lt;th&gt;Download&lt;/th&gt;&lt;th&gt;Error&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'chromedriver' is not in PATH (with disabled Selenium Manager)
-&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;[WinError 193] %1 is not a valid Win32 application&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Firefox&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: Webdriver executable 'geckodriver' is not in PATH (with disabled Selenium Manager)
-&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Firefox&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</msg>
-<msg time="2024-09-24T17:30:27.662108" level="INFO">Opening url 'http://192.168.9.62/inlislite3/backend/site/login'</msg>
-<arg>${url}</arg>
-<doc>Attempts to open a browser on the user's device from a set of
-supported browsers. Automatically downloads a corresponding webdriver
-if none is already installed.</doc>
-<status status="PASS" start="2024-09-24T17:30:09.455140" elapsed="26.685393"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${TAHUN}</arg>
+<arg>${json_data['tahun']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.913" endtime="20241111 16:43:03.913"/>
 </kw>
-<arg>${ip_address}</arg>
-<status status="PASS" start="2024-09-24T17:30:09.454140" elapsed="26.686393"/>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${EDITOR}</arg>
+<arg>${json_data['editor']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.913" endtime="20241111 16:43:03.914"/>
+</kw>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${ILUSTRATOR}</arg>
+<arg>${json_data['ilustrator']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.914" endtime="20241111 16:43:03.914"/>
+</kw>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${SINOPSIS}</arg>
+<arg>${json_data['sinopsis']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.914" endtime="20241111 16:43:03.914"/>
+</kw>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${KEYWORD}</arg>
+<arg>${json_data['keyword']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.914" endtime="20241111 16:43:03.914"/>
+</kw>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>${NOCLASS}</arg>
+<arg>${json_data['no_class']}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:03.914" endtime="20241111 16:43:03.914"/>
+</kw>
+<status status="FAIL" starttime="20241111 16:41:39.135" endtime="20241111 16:43:03.915">ConnectTimeout: HTTPConnectionPool(host='192.168.9.133', port=5000): Max retries exceeded with url: /api/getBookSinopsis/1 (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD4AC0&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)'))</status>
+</test>
+<test id="s1-t2" name="Otomatisasi Entri Katalog" line="71">
+<kw name="Open Browser" library="RPA.Browser.Selenium">
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<msg timestamp="20241111 16:43:03.916" level="INFO">Opening browser 'Firefox' to base url 'http://localhost/inlislite3/backend/site/login'.</msg>
+<status status="PASS" starttime="20241111 16:43:03.915" endtime="20241111 16:43:09.949"/>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20241111 16:43:11.961" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20241111 16:43:09.949" endtime="20241111 16:43:11.961"/>
 </kw>
 <kw name="Login website">
-<kw name="Input Text" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:36.145535" level="INFO">Typing text 'inlislite' into text field 'id:loginform-username'.</msg>
+<kw name="Input Text" library="RPA.Browser.Selenium">
 <arg>id:loginform-username</arg>
-<arg>${username}</arg>
+<arg>inlislite</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:36.143532" elapsed="0.243624"/>
+<msg timestamp="20241111 16:43:11.963" level="INFO">Typing text 'inlislite' into text field 'id:loginform-username'.</msg>
+<status status="PASS" starttime="20241111 16:43:11.962" endtime="20241111 16:43:12.028"/>
 </kw>
-<kw name="Input Text" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:36.388381" level="INFO">Typing text 'inlislite=' into text field 'id:loginform-password'.</msg>
+<kw name="Input Text" library="RPA.Browser.Selenium">
 <arg>id:loginform-password</arg>
-<arg>${password}</arg>
+<arg>inlislite=</arg>
 <doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:36.388381" elapsed="0.030685"/>
+<msg timestamp="20241111 16:43:12.029" level="INFO">Typing text 'inlislite=' into text field 'id:loginform-password'.</msg>
+<status status="PASS" starttime="20241111 16:43:12.028" endtime="20241111 16:43:12.044"/>
 </kw>
-<kw name="Click Button" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:36.420067" level="INFO">Clicking button 'name:login-button'.</msg>
+<kw name="Click Button" library="RPA.Browser.Selenium">
 <arg>name:login-button</arg>
 <doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:36.419066" elapsed="0.255497"/>
+<msg timestamp="20241111 16:43:12.045" level="INFO">Clicking button 'name:login-button'.</msg>
+<status status="PASS" starttime="20241111 16:43:12.044" endtime="20241111 16:43:12.274"/>
 </kw>
-<arg>${username}</arg>
-<arg>${password}</arg>
-<status status="PASS" start="2024-09-24T17:30:36.141533" elapsed="0.533030"/>
+<status status="PASS" starttime="20241111 16:43:11.961" endtime="20241111 16:43:12.274"/>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20241111 16:43:14.289" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20241111 16:43:12.274" endtime="20241111 16:43:14.289"/>
 </kw>
 <kw name="Select Library Location">
-<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<kw name="Wait Until Element Is Visible" library="RPA.Browser.Selenium">
 <arg>xpath=//span[@id="select2-dynamicmodel-location-container"]</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:36.675600" elapsed="2.002192"/>
+<status status="PASS" starttime="20241111 16:43:14.289" endtime="20241111 16:43:14.303"/>
 </kw>
-<kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:38.679828" level="INFO">Clicking element 'xpath=//span[@id="select2-dynamicmodel-location-container"]'.</msg>
+<kw name="Click Element" library="RPA.Browser.Selenium">
 <arg>xpath=//span[@id="select2-dynamicmodel-location-container"]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:38.678807" elapsed="0.264301"/>
+<msg timestamp="20241111 16:43:14.303" level="INFO">Clicking element 'xpath=//span[@id="select2-dynamicmodel-location-container"]'.</msg>
+<status status="PASS" starttime="20241111 16:43:14.303" endtime="20241111 16:43:14.523"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<kw name="Wait Until Element Is Visible" library="RPA.Browser.Selenium">
 <arg>xpath=//li[contains(text(), 'Perpustakaan Pusat')]</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:38.944150" elapsed="0.023037"/>
+<status status="PASS" starttime="20241111 16:43:14.524" endtime="20241111 16:43:14.538"/>
 </kw>
-<kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:38.968230" level="INFO">Clicking element 'xpath=//li[contains(text(), 'Perpustakaan Pusat')]'.</msg>
+<kw name="Click Element" library="RPA.Browser.Selenium">
 <arg>xpath=//li[contains(text(), 'Perpustakaan Pusat')]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:38.968230" elapsed="0.722310"/>
+<msg timestamp="20241111 16:43:14.540" level="INFO">Clicking element 'xpath=//li[contains(text(), 'Perpustakaan Pusat')]'.</msg>
+<status status="PASS" starttime="20241111 16:43:14.538" endtime="20241111 16:43:15.273"/>
 </kw>
-<status status="PASS" start="2024-09-24T17:30:36.675600" elapsed="3.014940"/>
+<status status="PASS" starttime="20241111 16:43:14.289" endtime="20241111 16:43:15.273"/>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20241111 16:43:17.282" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20241111 16:43:15.274" endtime="20241111 16:43:17.282"/>
 </kw>
 <kw name="Click Submit Button">
-<kw name="Click Button When Visible" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:39.710104" level="INFO">Clicking button '//button[@class="btn btn-primary btn-block btn-flat button_login"]'.</msg>
+<kw name="Click Button When Visible" library="RPA.Browser.Selenium">
 <arg>//button[@class="btn btn-primary btn-block btn-flat button_login"]</arg>
 <doc>Click button identified by ``locator``, once it becomes visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:39.691540" elapsed="0.262582"/>
+<msg timestamp="20241111 16:43:17.296" level="INFO">Clicking button '//button[@class="btn btn-primary btn-block btn-flat button_login"]'.</msg>
+<status status="PASS" starttime="20241111 16:43:17.282" endtime="20241111 16:43:17.530"/>
 </kw>
-<status status="PASS" start="2024-09-24T17:30:39.690540" elapsed="0.263582"/>
+<status status="PASS" starttime="20241111 16:43:17.282" endtime="20241111 16:43:17.530"/>
 </kw>
-<kw name="Navigate to Entri Katalog">
-<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20241111 16:43:19.532" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20241111 16:43:17.531" endtime="20241111 16:43:19.532"/>
+</kw>
+<kw name="Navigate to Entri Katalog (RDA)">
+<kw name="Wait Until Element Is Visible" library="RPA.Browser.Selenium">
 <arg>xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:39.956122" elapsed="3.788929"/>
+<status status="PASS" starttime="20241111 16:43:19.533" endtime="20241111 16:43:19.548"/>
 </kw>
-<kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:43.746051" level="INFO">Clicking element 'xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]'.</msg>
+<kw name="Click Element" library="RPA.Browser.Selenium">
 <arg>xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:43.745051" elapsed="0.291374"/>
+<msg timestamp="20241111 16:43:19.549" level="INFO">Clicking element 'xpath=//li[@class="treeview"]/a[contains(@href, '/pengkatalogan/katalog/index')]'.</msg>
+<status status="PASS" starttime="20241111 16:43:19.549" endtime="20241111 16:43:19.796"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
-<arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']</arg>
+<kw name="Wait Until Element Is Visible" library="RPA.Browser.Selenium">
+<arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=1']</arg>
 <arg>timeout=10s</arg>
 <doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:44.037431" elapsed="0.030496"/>
+<status status="PASS" starttime="20241111 16:43:19.796" endtime="20241111 16:43:19.810"/>
 </kw>
-<kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:44.069927" level="INFO">Clicking element 'xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']'.</msg>
-<arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=0']</arg>
+<kw name="Click Element" library="RPA.Browser.Selenium">
+<arg>xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=1']</arg>
 <doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:44.068928" elapsed="2.846113"/>
+<msg timestamp="20241111 16:43:19.811" level="INFO">Clicking element 'xpath=//li/a[@href='/inlislite3/backend/pengkatalogan/katalog/create?for=cat&amp;rda=1']'.</msg>
+<status status="PASS" starttime="20241111 16:43:19.811" endtime="20241111 16:43:20.452"/>
 </kw>
-<status status="PASS" start="2024-09-24T17:30:39.955121" elapsed="6.960922"/>
+<status status="PASS" starttime="20241111 16:43:19.533" endtime="20241111 16:43:20.452"/>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20241111 16:43:22.462" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20241111 16:43:20.452" endtime="20241111 16:43:22.462"/>
 </kw>
 <kw name="Input Book Data">
-<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
-<arg>id:TagsValue_245</arg>
-<arg>timeout=10s</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:46.918043" elapsed="0.088488"/>
-</kw>
-<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.008538" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_245').value += `Design to grow : how Coca-Cola learned to combine scale and agility`;
-Without any arguments.</msg>
-<arg>document.getElementById('TagsValue_245').value += `${judul}`;</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.007537" elapsed="0.025008"/>
-</kw>
-<arg>Execute JavaScript</arg>
-<arg>document.getElementById('TagsValue_245').value += `${judul}`;</arg>
-<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.006531" elapsed="0.026839"/>
-</kw>
-<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.035720" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_100').value += `Butler, David`;
-Without any arguments.</msg>
-<arg>document.getElementById('TagsValue_100').value += `${pengarang}`;</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.034712" elapsed="0.007714"/>
-</kw>
-<arg>Execute JavaScript</arg>
-<arg>document.getElementById('TagsValue_100').value += `${pengarang}`;</arg>
-<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.033370" elapsed="0.010066"/>
-</kw>
-<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.045749" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_260_0').value += `David Butler and Linda Tischler`;
-Without any arguments.</msg>
-<arg>document.getElementById('TagsValue_260_0').value += `${penerbitan}`;</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.044548" elapsed="0.013471"/>
-</kw>
-<arg>Execute JavaScript</arg>
-<arg>document.getElementById('TagsValue_260_0').value += `${penerbitan}`;</arg>
-<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.043436" elapsed="0.014583"/>
-</kw>
-<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.060534" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_500_0').value += `For information about special discounts for bulk purchases, please`;
-Without any arguments.</msg>
-<arg>document.getElementById('TagsValue_500_0').value += `${desc}`;</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.060112" elapsed="0.007385"/>
-</kw>
-<arg>Execute JavaScript</arg>
-<arg>document.getElementById('TagsValue_500_0').value += `${desc}`;</arg>
-<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.059070" elapsed="0.008835"/>
-</kw>
-<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.070263" level="INFO">Executing JavaScript:
-document.getElementById('TagsValue_020_0').value += `978-1-4516-7182-7`;
-Without any arguments.</msg>
-<arg>document.getElementById('TagsValue_020_0').value += `${isbn}`;</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.069255" elapsed="0.007796"/>
-</kw>
-<arg>Execute JavaScript</arg>
-<arg>document.getElementById('TagsValue_020_0').value += `${isbn}`;</arg>
-<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.068913" elapsed="0.009145"/>
-</kw>
-<kw name="Click Button" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.078058" level="INFO">Clicking button 'id:btnSave2'.</msg>
-<arg>id:btnSave2</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.078058" elapsed="0.298344"/>
-</kw>
 <arg>${JUDUL}</arg>
 <arg>${PENGARANG}</arg>
 <arg>${PENERBITAN}</arg>
 <arg>${DESC}</arg>
 <arg>${ISBN}</arg>
-<status status="PASS" start="2024-09-24T17:30:46.917043" elapsed="0.460357"/>
+<arg>${KOTA}</arg>
+<arg>${EDITOR}</arg>
+<arg>${SINOPSIS}</arg>
+<arg>${KEYWORD}</arg>
+<arg>${ILUSTRATOR}</arg>
+<arg>${NOCLASS}</arg>
+<msg timestamp="20241111 16:43:22.464" level="FAIL">Variable '${JUDUL}' not found.</msg>
+<status status="FAIL" starttime="20241111 16:43:22.462" endtime="20241111 16:43:22.464"/>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:22.464" endtime="20241111 16:43:22.464"/>
 </kw>
 <kw name="Logout Website">
-<kw name="Wait Until Element Is Not Visible" owner="RPA.Browser.Selenium">
-<arg>css=div.modal-backdrop</arg>
-<arg>timeout=30s</arg>
-<doc>Waits until the element ``locator`` is not visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.379401" elapsed="0.484575"/>
+<status status="NOT RUN" starttime="20241111 16:43:22.464" endtime="20241111 16:43:22.464"/>
 </kw>
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.865980" level="INFO">Executing JavaScript:
-swal.close();
-Without any arguments.</msg>
-<arg>swal.close();</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.864980" elapsed="0.009998"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="RPA.Browser.Selenium">
-<arg>xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]</arg>
-<arg>timeout=30s</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.875979" elapsed="0.019786"/>
-</kw>
-<kw name="Click Element" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:47.896773" level="INFO">Clicking element 'xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]'.</msg>
-<arg>xpath=//li[@class="dropdown user user-menu"]/a[contains(@class, 'dropdown-toggle')]</arg>
-<doc>Click the element identified by ``locator``.</doc>
-<status status="PASS" start="2024-09-24T17:30:47.896773" elapsed="5.256226"/>
-</kw>
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:53.155004" level="INFO">Executing JavaScript:
-return document.querySelector("a[href='/inlislite3/backend/site/logout']");
-Without any arguments.</msg>
-<msg time="2024-09-24T17:30:53.185238" level="INFO">${logout_element} = &lt;selenium.webdriver.remote.webelement.WebElement (session="20719870-56b4-4a0c-b84f-667dd476fb33", element="b6a40a1a-5497-44e9-b42a-80f56ed4717b")&gt;</msg>
-<var>${logout_element}</var>
-<arg>return document.querySelector("a[href='/inlislite3/backend/site/logout']");</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:53.154002" elapsed="0.031236"/>
-</kw>
-<if>
-<branch type="IF" condition="'${logout_element}' == None">
-<kw name="Fail" owner="BuiltIn">
-<arg>Logout link not found in the DOM</arg>
-<doc>Fails the test with the given message and optionally alters its tags.</doc>
-<status status="NOT RUN" start="2024-09-24T17:30:53.186239" elapsed="0.000000"/>
-</kw>
-<status status="NOT RUN" start="2024-09-24T17:30:53.185238" elapsed="0.002001"/>
-</branch>
-<status status="PASS" start="2024-09-24T17:30:53.185238" elapsed="0.002001"/>
-</if>
-<kw name="Execute Javascript" owner="RPA.Browser.Selenium">
-<msg time="2024-09-24T17:30:53.188239" level="INFO">Executing JavaScript:
-document.querySelector("a[href='/inlislite3/backend/site/logout']").click();
-Without any arguments.</msg>
-<arg>document.querySelector("a[href='/inlislite3/backend/site/logout']").click();</arg>
-<doc>Executes the given JavaScript code with possible arguments.</doc>
-<status status="PASS" start="2024-09-24T17:30:53.187239" elapsed="0.032596"/>
-</kw>
-<status status="PASS" start="2024-09-24T17:30:47.378401" elapsed="5.842433"/>
+<kw name="Sleep" library="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:22.464" endtime="20241111 16:43:22.464"/>
 </kw>
 <kw name="Close Browser">
-<kw name="Close All Browsers" owner="RPA.Browser.Selenium">
-<doc>Closes all open browsers and resets the browser cache.</doc>
-<status status="PASS" start="2024-09-24T17:30:53.222835" elapsed="3.654779"/>
+<status status="NOT RUN" starttime="20241111 16:43:22.465" endtime="20241111 16:43:22.465"/>
 </kw>
-<status status="PASS" start="2024-09-24T17:30:53.220834" elapsed="3.656780"/>
+<kw name="Sleep" library="BuiltIn">
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" starttime="20241111 16:43:22.465" endtime="20241111 16:43:22.465"/>
 </kw>
-<status status="PASS" start="2024-09-24T17:30:09.421135" elapsed="47.457479"/>
+<status status="FAIL" starttime="20241111 16:43:03.915" endtime="20241111 16:43:22.465">Variable '${JUDUL}' not found.</status>
 </test>
-<status status="PASS" start="2024-09-24T17:30:07.203521" elapsed="49.676096"/>
+<test id="s1-t3" name="Operation" line="100">
+<kw name="Download Image">
+<kw name="Set Variable" library="BuiltIn">
+<var>${book_id}</var>
+<arg>${BOOK_ID}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20241111 16:43:22.467" level="INFO">${book_id} = 1</msg>
+<status status="PASS" starttime="20241111 16:43:22.466" endtime="20241111 16:43:22.467"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${API_URL}</var>
+<arg>${BASE_API_URL}/api/sendCover/${BOOK_ID}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20241111 16:43:22.467" level="INFO">${API_URL} = http://192.168.9.133:5000/api/sendCover/1</msg>
+<status status="PASS" starttime="20241111 16:43:22.467" endtime="20241111 16:43:22.467"/>
+</kw>
+<kw name="Download" library="RPA.HTTP">
+<arg>${API_URL}</arg>
+<arg>${DOWNLOAD_PATH}/${book_id}.jpg</arg>
+<doc>An alias for the ``HTTP Get`` keyword.</doc>
+<msg timestamp="20241111 16:43:22.468" level="INFO">Creating a new HTTP session</msg>
+<msg timestamp="20241111 16:43:22.468" level="INFO">Creating Session using : alias=rpasession_alias.http192.168.9.133:5000, url=http://192.168.9.133:5000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<msg timestamp="20241111 16:43:43.530" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD7040&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/sendCover/1</msg>
+<msg timestamp="20241111 16:44:04.786" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD6B30&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/sendCover/1</msg>
+<msg timestamp="20241111 16:44:26.239" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD5480&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/sendCover/1</msg>
+<msg timestamp="20241111 16:44:47.266" level="FAIL">ConnectTimeout: HTTPConnectionPool(host='192.168.9.133', port=5000): Max retries exceeded with url: /api/sendCover/1 (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD54E0&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)'))</msg>
+<status status="FAIL" starttime="20241111 16:43:22.468" endtime="20241111 16:44:47.268"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>Image downloaded to ${DOWNLOAD_PATH}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.268" endtime="20241111 16:44:47.268"/>
+</kw>
+<status status="FAIL" starttime="20241111 16:43:22.466" endtime="20241111 16:44:47.268"/>
+</kw>
+<kw name="Connect To Database" library="RPA.Database">
+<arg>pymysql</arg>
+<arg>${DB_NAME}</arg>
+<arg>${USERNAME}</arg>
+<arg>${PASSWORD}</arg>
+<arg>${DB_HOST}</arg>
+<arg>${DB_PORT}</arg>
+<doc>Connect to database using DB API 2.0 module.</doc>
+<msg timestamp="20241111 16:44:47.269" level="INFO">Protecting keyword: RPA.Database.Connect To Database</msg>
+<msg timestamp="20241111 16:44:47.269" level="INFO">Log level changed from NONE to INFO.</msg>
+<status status="NOT RUN" starttime="20241111 16:44:47.268" endtime="20241111 16:44:47.269"/>
+</kw>
+<kw name="Check If Book Exists">
+<var>${exists}</var>
+<arg>${book_id}</arg>
+<status status="NOT RUN" starttime="20241111 16:44:47.269" endtime="20241111 16:44:47.269"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${cover_url}</var>
+<arg>${book_id}.jpg</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.269" endtime="20241111 16:44:47.269"/>
+</kw>
+<if>
+<branch type="IF" condition="${exists}">
+<kw name="Query" library="RPA.Database">
+<arg>UPDATE catalogs SET CoverURL = '${cover_url}' WHERE id = ${book_id};</arg>
+<doc>Execute a SQL query and optionally return the execution result.</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.270" endtime="20241111 16:44:47.270"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>CoverURL updated to ${cover_url} for Book ID ${book_id}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.270" endtime="20241111 16:44:47.270"/>
+</kw>
+<status status="NOT RUN" starttime="20241111 16:44:47.269" endtime="20241111 16:44:47.270"/>
+</branch>
+<branch type="ELSE">
+<kw name="Log To Console" library="BuiltIn">
+<arg>message: Book with ID ${book_id} was not found</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.270" endtime="20241111 16:44:47.270"/>
+</kw>
+<status status="NOT RUN" starttime="20241111 16:44:47.270" endtime="20241111 16:44:47.270"/>
+</branch>
+<status status="NOT RUN" starttime="20241111 16:44:47.269" endtime="20241111 16:44:47.270"/>
+</if>
+<kw name="Sleep" library="BuiltIn">
+<arg>7s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.270" endtime="20241111 16:44:47.271"/>
+</kw>
+<kw name="Disconnect From Database" library="RPA.Database">
+<doc>Close connection to SQL database</doc>
+<status status="NOT RUN" starttime="20241111 16:44:47.271" endtime="20241111 16:44:47.271"/>
+</kw>
+<status status="FAIL" starttime="20241111 16:43:22.466" endtime="20241111 16:44:47.271">ConnectTimeout: HTTPConnectionPool(host='192.168.9.133', port=5000): Max retries exceeded with url: /api/sendCover/1 (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD54E0&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)'))</status>
+</test>
+<status status="FAIL" starttime="20241111 16:41:38.528" endtime="20241111 16:44:47.271"/>
 </suite>
 <statistics>
 <total>
-<stat pass="1" fail="0" skip="0">All Tests</stat>
+<stat pass="0" fail="3" skip="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat pass="1" fail="0" skip="0" id="s1" name="Tasks">Tasks</stat>
+<stat pass="0" fail="3" skip="0" id="s1" name="Tasks">Tasks</stat>
 </suite>
 </statistics>
 <errors>
-<msg time="2024-09-24T17:30:14.012661" level="WARN">Webdriver version couldn't be read due to: [WinError 193] %1 is not a valid Win32 application</msg>
-<msg time="2024-09-24T17:30:14.207171" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
-<msg time="2024-09-24T17:30:14.871281" level="WARN">The custom provided browser (C:\Program Files\Mozilla Firefox\firefox.exe) might be incompatible with the default downloaded webdriver. Use ``Open Browser`` with these `options` and a compatible `executable_path` if running into issues.</msg>
+<msg timestamp="20241111 16:42:00.169" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD45B0&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/getBookSinopsis/1</msg>
+<msg timestamp="20241111 16:42:21.423" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD4820&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/getBookSinopsis/1</msg>
+<msg timestamp="20241111 16:42:42.873" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD4940&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/getBookSinopsis/1</msg>
+<msg timestamp="20241111 16:43:43.530" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD7040&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/sendCover/1</msg>
+<msg timestamp="20241111 16:44:04.786" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD6B30&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/sendCover/1</msg>
+<msg timestamp="20241111 16:44:26.239" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x0000026423CD5480&gt;, 'Connection to 192.168.9.133 timed out. (connect timeout=None)')': /api/sendCover/1</msg>
 </errors>
 </robot>

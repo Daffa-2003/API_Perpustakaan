@@ -1,0 +1,21 @@
+1731318184218	geckodriver	INFO	Listening on 127.0.0.1:54485
+1731318187256	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "54486" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\dafiq\\AppData\\Local\\Temp\\rust_mozprofilelSV5RY"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1731318187530	Marionette	INFO	Marionette enabled
+1731318187643	Marionette	INFO	Listening on port 54495
+WebDriver BiDi listening on ws://127.0.0.1:54486
+Read port: 54495
+1731318187763	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost."
+1731318195058	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.sys.mjs:219:24
+TimedPromise@chrome://remote/content/marionette/sync.sys.mjs:203:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.sys.mjs:467:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.sys.mjs:220:33
+JavaScript error: http://localhost/inlislite3/backend/assets/43ef6cc5/jquery.js, line 1468: Error: Syntax error, unrecognized expression: /inlislite3/backend/pengkatalogan/katalog/create?for=cat&rda=1
+JavaScript error: resource://gre/actors/FormHandlerChild.sys.mjs, line 103: InvalidStateError: JSWindowActorChild.document getter: Cannot access property 'document' after actor 'FormHandler' has been destroyed
+1731318221833	Marionette	INFO	Stopped listening on port 54495
+Dynamically enable window occlusion 1
