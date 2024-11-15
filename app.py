@@ -527,7 +527,6 @@ def getSinopsis(master_buku_id):
 @app.route('/api/getklasifikasi', methods=['POST'])
 # @jwt_required()
 def klasifikasi():
-<<<<<<< HEAD
     try:
         data = request.get_json()
         key = abstract.generate_keywords_openai(data['sinopsis'])
@@ -539,7 +538,6 @@ def klasifikasi():
         }), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
-=======
     # try:
     #     data = request.get_json()
     #     key = tajuk.generate_keywords_openai(data['sinopsis'])
@@ -558,7 +556,6 @@ def klasifikasi():
         return jsonify(result), 200 
     except Exception as e: 
 	    return jsonify({'message': str(e)}), 400    
->>>>>>> 69d4df15ecb40ce9962173102bc9a4dc055edd15
 
 # get book and sinopsis by id
 @app.route('/api/getBookSinopsis/<id>', methods=['GET'])
