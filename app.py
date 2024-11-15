@@ -8,9 +8,10 @@ from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from OpenAI import abstract
 from OpenAI import tajukSubjek as tajuk
-from flask_jwt_extended import create_access_token, JWTManager
+from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt_identity, create_refresh_token
 import subprocess
 from sqlalchemy import or_, func
+import datetime
 
 
 app = Flask(__name__)
@@ -30,6 +31,8 @@ app.config['UPLOAD_FOTOPROFILE'] = UPLOAD_FOTOPROFILE
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['JWT_SECRET_KEY'] = 'naplsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=7)
 jwt = JWTManager(app)
 
 class MasterBuku(db.Model):
@@ -131,14 +134,22 @@ def login():
             return jsonify({'message': 'User tidak ditemukan'}), 404
         if Bcrypt().check_password_hash(user.password, data['password']):   
             access_token = create_access_token(identity=user.id)
-            return jsonify({'access_token': access_token, 'id' : user.id}), 200
+            refresh_token = create_refresh_token(identity=user.id)
+            return jsonify({'access_token': access_token,'refresh_token':refresh_token ,'id' : user.id}), 200
         else:
             return jsonify({'message': 'Password salah'}), 400
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+@app.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)  # Hanya menerima refresh token
+def refresh():
+    current_user = get_jwt_identity()  # Dapatkan user dari refresh token
+    new_access_token = create_access_token(identity=current_user)
+    return jsonify(access_token=new_access_token), 200
     
 # get user
 @app.route('/api/getUser', methods=['GET'])
+@jwt_required()
 def getUser():
     try:
         user = User.query.all()
@@ -155,6 +166,7 @@ def getUser():
 
 # get  user 
 @app.route('/api/getUser/<id>', methods=['GET'])
+@jwt_required()
 def getUserLogin(id):
     try:
         user = User.query.filter_by(id=id).first()
@@ -224,6 +236,7 @@ def get_profile(filename):
 
 # logout
 @app.route('/api/logout', methods=['POST'])
+@jwt_required()
 def logout():
     try:
         # Hanya kembalikan pesan sukses
@@ -235,6 +248,7 @@ def logout():
 
 # endpoint untuk menambahkan data buku
 @app.route('/api/addBuku/<id>', methods=['POST'])
+@jwt_required()
 def addBuku(id):
     try:
         data = request.get_json()
@@ -263,6 +277,7 @@ def addBuku(id):
     
 # get buku sesuai dengan user yang membuat
 @app.route('/api/getBuku', methods=['GET'])
+@jwt_required()
 def getBuku():
     try:
         # Ambil userId dari query parameters
@@ -303,6 +318,7 @@ def getBuku():
 
 # get buku and sinopsis
 @app.route('/api/getBukuSinopsis', methods=['GET'])
+@jwt_required()
 def getBukuSinopsis():
     try:
         buku = MasterBuku.query.all()
@@ -332,6 +348,7 @@ def getBukuSinopsis():
 
 # get buku by id 
 @app.route("/api/getBuku/<id>", methods=['GET'])
+@jwt_required()
 def getBukuById(id):
     buku = MasterBuku.query.filter_by(id=id).first()
     if buku is None:
@@ -351,6 +368,7 @@ def getBukuById(id):
 
 # edit buku by id
 @app.route('/api/editBuku/<id>', methods=['PUT'])
+@jwt_required()
 def editBuku(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -379,6 +397,7 @@ def editBuku(id):
 
 # delete buku by id
 @app.route('/api/deleteBuku/<id>', methods=['DELETE'])
+@jwt_required()
 def deleteBuku(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -393,6 +412,7 @@ def deleteBuku(id):
 
 # add cover
 @app.route('/api/uploadCover/<master_buku_id>', methods=['POST'])
+@jwt_required()
 def uploadCover(master_buku_id):
     if 'file' not in request.files:
         return jsonify({'message': 'No file part'}), 400
@@ -434,6 +454,7 @@ def get_image(filename):
 
 # edit cover by id
 @app.route('/api/editCover/<id>', methods=['PUT'])
+@jwt_required()
 def editCover(id):
     try:
         cover = CoverBuku.query.filter_by(id=id).first()
@@ -454,6 +475,7 @@ def editCover(id):
     
 # delete cover by id
 @app.route('/api/deleteCover/<id>', methods=['DELETE'])
+@jwt_required()
 def deleteCover(id):
     try:
         cover = CoverBuku.query.filter_by(id=id).first()
@@ -467,6 +489,7 @@ def deleteCover(id):
     
 # add sinopsis
 @app.route('/api/addSinopsis/<master_buku_id>', methods=['POST'])
+@jwt_required()
 def addSinopsis(master_buku_id):
     try:
         data = request.get_json()
@@ -484,6 +507,7 @@ def addSinopsis(master_buku_id):
 
 # get sinopsis by master_buku_id
 @app.route('/api/getSinopsis/<master_buku_id>', methods=['GET'])
+@jwt_required()
 def getSinopsis(master_buku_id):
     try:
         sinopsis = SinopsisBuku.query.filter_by(master_buku_id=master_buku_id).first()
@@ -501,7 +525,9 @@ def getSinopsis(master_buku_id):
     
 # get klasifikasi keyword by sinopsis 
 @app.route('/api/getklasifikasi', methods=['POST'])
+# @jwt_required()
 def klasifikasi():
+<<<<<<< HEAD
     try:
         data = request.get_json()
         key = abstract.generate_keywords_openai(data['sinopsis'])
@@ -513,9 +539,30 @@ def klasifikasi():
         }), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+=======
+    # try:
+    #     data = request.get_json()
+    #     key = tajuk.generate_keywords_openai(data['sinopsis'])
+    #     print(key)
+    #     return jsonify({
+    #         'deweyNoClass': key.get('deweyNoClass', 'N/A'),
+    #         'subjek' : key.get('subject', 'N/A'),
+    #     }), 200
+    # except Exception as e:
+    #     return jsonify({'message': str(e)}), 400
+    try: 
+        data = request.get_json() 
+        if not data or 'sinopsis' not in data: 
+            return jsonify({'message': 'Sinopsis is required'}), 400 
+        result = tajuk.generate_keywords_openai(data['sinopsis']) 
+        return jsonify(result), 200 
+    except Exception as e: 
+	    return jsonify({'message': str(e)}), 400    
+>>>>>>> 69d4df15ecb40ce9962173102bc9a4dc055edd15
 
 # get book and sinopsis by id
 @app.route('/api/getBookSinopsis/<id>', methods=['GET'])
+@jwt_required()
 def getBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -543,6 +590,7 @@ def getBookSinopsis(id):
     
 # edit sinopsis and buku by id
 @app.route('/api/editBookSinopsis/<id>', methods=['PUT'])
+@jwt_required()
 def editBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -706,6 +754,7 @@ def searchBuku():
 
 # get klasifikasi buku
 @app.route('/api/getKlasifikasiBuku', methods=['GET'])
+@jwt_required()
 def getklasifikasi():
     try:
         klasifikasi = KlasifikasiBuku.query.all()
@@ -745,6 +794,7 @@ def getklasifikasi():
 
 # add klasifikasi buku
 @app.route('/api/addKlasfikasi', methods=['POST'])
+@jwt_required()
 def addKlasfikasi():
     try:
         data = request.get_json()
@@ -763,6 +813,7 @@ def addKlasfikasi():
 
 # get by id klasifikasi buku
 @app.route('/api/getKlasifikasiBuku/<id>', methods=['GET'])
+@jwt_required()
 def getKlasifikasiById(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -777,6 +828,7 @@ def getKlasifikasiById(id):
 
 # edit klasifikasi buku by id
 @app.route('/api/editKlasifikasi/<id>', methods=['PUT'])
+@jwt_required()
 def editKlasifikasi(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -801,6 +853,7 @@ def editKlasifikasi(id):
     
 # delete klasifikasi buku by id
 @app.route('/api/deleteKlasifikasi/<id>', methods=['DELETE'])
+@jwt_required()
 def deleteKlasifikasi(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()

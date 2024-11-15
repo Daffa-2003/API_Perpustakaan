@@ -23,7 +23,7 @@ def is_synopsis_match(synopsis, narasi_klasifikasi, subject):
     else:
         match_ratio_subject = 0
     
-    return match_ratio_subject >= 80 or  match_ratio >= 80 
+    return match_ratio_subject >= 70 or  match_ratio >= 70 
 
 # Cek apakah file cache ada
 cache_file = './Damy/cache.json'
@@ -34,6 +34,9 @@ else:
     cache = {}
 
 def generate_keywords_openai(synopsis):
+    # if synopsis in cache: 
+    #     return cache[synopsis]
+    
     from app import app, KlasifikasiBuku
     # Memastikan bahwa konteks aplikasi ada saat mengakses database
     with app.app_context():
@@ -66,12 +69,14 @@ def generate_keywords_openai(synopsis):
         # Pencocokan synopsis dengan setiap narasi klasifikasi
         for klasifikasi in klasifikasi_buku:
             # print(klasifikasi.subject)
-            if is_synopsis_match(keywords, klasifikasi.narasi_klasifikasi, klasifikasi.subject):
-                matches.append({
-                    'deweyNoClass': klasifikasi.deweyNoClass,
-                    'narasiKlasifikasi': klasifikasi.narasi_klasifikasi,
-                    'subject': klasifikasi.subject
-                })
+           for keyword in keywords_list:
+                if is_synopsis_match(keyword, klasifikasi.narasi_klasifikasi, klasifikasi.subject):
+                    matches.append({
+                        'deweyNoClass': klasifikasi.deweyNoClass,
+                        'narasiKlasifikasi': klasifikasi.narasi_klasifikasi,
+                        'subject': klasifikasi.subject
+                    })
+                    break
         
         # Jika ada kecocokan, return nilai deweyNoClass dan subject pertama
         if matches:
@@ -82,7 +87,10 @@ def generate_keywords_openai(synopsis):
                 'source': 'from database'
             }
         else:
-            return "keywords tidak ada di database"
+           return { 
+                'keywords': keywords, 
+                'message': "keywords tidak ada di database" 
+            }
 
 # # Contoh penggunaan
 # if __name__ == '__main__':
