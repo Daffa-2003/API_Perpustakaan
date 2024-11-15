@@ -6,7 +6,11 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
+<<<<<<< HEAD
 from OpenAI import abstract 
+=======
+from OpenAI import tajukSubjek as tajuk
+>>>>>>> 31a743a18622454a0f88fe142fd97837e6996432
 from flask_jwt_extended import create_access_token, JWTManager
 import subprocess
 from sqlalchemy import or_, func
@@ -78,7 +82,11 @@ class KlasifikasiBuku(db.Model):
     narasi_klasifikasi = db.Column(db.String(250), nullable=True)
     subject = db.Column(db.String(250), nullable=True)
 
+<<<<<<< HEAD
     def _repr_(self):
+=======
+    def __repr__(self):
+>>>>>>> 31a743a18622454a0f88fe142fd97837e6996432
         return f"<KlasifikasiBuku {self.id}>"
 
 class User(db.Model):
@@ -504,7 +512,12 @@ def getSinopsis(master_buku_id):
 def klasifikasi():
     try:
         data = request.get_json()
+<<<<<<< HEAD
         key = abstract.generate_keywords_openai(data['sinopsis'])
+=======
+        key = tajuk.generate_keywords_openai(data['sinopsis'])
+        print(key)
+>>>>>>> 31a743a18622454a0f88fe142fd97837e6996432
         return jsonify({
             'deweyNoClass': key.get('deweyNoClass', 'N/A'),
             'subjek' : key.get('subject', 'N/A'),
@@ -657,11 +670,19 @@ def searchBuku():
                 'ilustrator' : b.ilustrator,
                 'sinopsis': None,
                 'keyword': None,
+<<<<<<< HEAD
                 'no_class': None
             })
         # search buku mengunakan sinopsis 
         scanIsbn = data['keyword'].replace("-","")
         isbn = MasterBuku.query.filter(func.replace(MasterBuku.isbn, "-", "").ilike(f"%{scanIsbn}%")).outerjoin(SinopsisBuku, MasterBuku.id == SinopsisBuku.master_buku_id).filter(SinopsisBuku.id.is_(None)).all()
+=======
+                'no_class' : None
+            })
+        keyword = data['keyword'].replace("-", "")
+        # search buku mengunakan sinopsis 
+        isbn = MasterBuku.query.filter(func.replace(MasterBuku.isbn, "-", "").ilike(f"%{keyword}%")).outerjoin(SinopsisBuku, MasterBuku.id == SinopsisBuku.master_buku_id).filter(SinopsisBuku.id.is_(None)).all()
+>>>>>>> 31a743a18622454a0f88fe142fd97837e6996432
         for i in isbn:
             bukuList.append({
                 'id': i.id,
@@ -678,7 +699,12 @@ def searchBuku():
                 'keyword': None,
                 'no_class' : None
             })
+<<<<<<< HEAD
         isbnAll = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), func.replace(MasterBuku.isbn, "-", "").ilike(f"%{scanIsbn}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()    
+=======
+        
+        isbnAll = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), MasterBuku.isbn.ilike(f"%{data['keyword']}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()    
+>>>>>>> 31a743a18622454a0f88fe142fd97837e6996432
         for c in isbnAll:
             bukuList.append({
                 'id': c.master_buku_id,
@@ -700,6 +726,138 @@ def searchBuku():
         return jsonify({'message': str(e)}), 400
 
 ##### klasifikasi buku #####
+<<<<<<< HEAD
+=======
+
+# get klasifikasi buku
+@app.route('/api/getKlasifikasiBuku', methods=['GET'])
+def getklasifikasi():
+    try:
+        klasifikasi = KlasifikasiBuku.query.all()
+        if not klasifikasi:
+            return jsonify({'message': 'Data tidak ditemukan'}), 404
+        klasifikasilist = []
+        for k in klasifikasi:
+            klasifikasilist.append({
+                'id': k.id,
+                'deweyNoClass': k.deweyNoClass,
+                'narasi_klasifikasi': k.narasi_klasifikasi,
+                'subject': k.subject
+            }), 
+        return jsonify({"data" : klasifikasilist}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# add klasifikasi buku
+@app.route('/api/addKlasfikasi', methods=['POST'])
+def addKlasfikasi():
+    try:
+        data = request.get_json()
+        klasifikasi = KlasifikasiBuku(
+            deweyNoClass = data['deweyNoClass'],
+            narasi_klasifikasi = data['narasi_klasifikasi'],
+            subject = data['subject']
+        )
+        if KlasifikasiBuku.query.filter_by(deweyNoClass=data['deweyNoClass']).first():
+            return jsonify({'message': 'Klasifikasi sudah terdaftar'}), 400
+        db.session.add(klasifikasi)
+        db.session.commit()
+        return jsonify({'message': 'Data berhasil ditambahkan'}), 201
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# get by id klasifikasi buku
+@app.route('/api/getKlasifikasiBuku/<id>', methods=['GET'])
+def getKlasifikasiById(id):
+    try:
+        klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
+        return jsonify({
+            'id': klasifikasi.id,
+            'deweyNoClass': klasifikasi.deweyNoClass,
+            'narasi_klasifikasi': klasifikasi.narasi_klasifikasi,
+            'subject': klasifikasi.subject
+        }), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# edit klasifikasi buku by id
+@app.route('/api/editKlasifikasi/<id>', methods=['PUT'])
+def editKlasifikasi(id):
+    try:
+        klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
+        if not klasifikasi:
+            return jsonify({'message' : 'Klasifikasi tidak di temukan'})
+        data = request.get_json()
+        klas = {
+            'deweyNoClass': data.get('deweyNoClass'),
+            'narasi_klasifikasi': data.get('narasi_klasifikasi'),
+            'subject': data.get('subject')
+        }
+        # cek apakah deweyNoClass yang baru sudah ada di database (kecuali untuk klasifikasi yang sedang di-update)
+        deweyNoClass_exists = KlasifikasiBuku.query.filter(KlasifikasiBuku.deweyNoClass == data['deweyNoClass'], KlasifikasiBuku.id != id).first()
+        if deweyNoClass_exists:
+            return jsonify({'message': 'deweyNoClass sudah terdaftar'}), 400
+        for key, value in klas.items():
+            setattr(klasifikasi, key , value)
+        db.session.commit()
+        return jsonify({'message': 'Data berhasil diubah'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+    
+# delete klasifikasi buku by id
+@app.route('/api/deleteKlasifikasi/<id>', methods=['DELETE'])
+def deleteKlasifikasi(id):
+    try:
+        klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
+        if klasifikasi is None:
+            return jsonify({'message': 'Data tidak ditemukan'}), 404
+        db.session.delete(klasifikasi)
+        db.session.commit()
+        return jsonify({'message': 'Data berhasil dihapus'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# search klasifikasi by all 
+@app.route('/api/searchKlasifikasi', methods=['POST'])
+def searchKlasifikasi():
+    try:
+        data = request.get_json()
+        keyword = data.get('keyword', '')
+        if not keyword:
+            return jsonify({'message': 'Keyword is required'}), 400
+        search = [
+            KlasifikasiBuku.deweyNoClass.ilike(f"%{keyword}%"),
+            KlasifikasiBuku.narasi_klasifikasi.ilike(f"%{keyword}%"),
+            KlasifikasiBuku.subject.ilike(f"%{keyword}%")
+        ]
+        klasifikasi = KlasifikasiBuku.query.filter(or_(*search)).all()
+        klasifikasiList = []
+        for k in klasifikasi:
+            klasifikasiList.append({
+                'id': k.id,
+                'deweyNoClass': k.deweyNoClass,
+                'narasi_klasifikasi': k.narasi_klasifikasi,
+                'subject': k.subject
+            })
+        return jsonify({"data":klasifikasiList}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+# mengirim foto cover buku
+@app.route('/api/sendCover/<id>', methods=['GET'])
+def getCoverBuku(id):
+    try:
+        cover = CoverBuku.query.filter_by(master_buku_id=id).first()
+        if cover is None:
+            return jsonify({'message': 'Data tidak ditemukan'}), 404
+        full_path = os.path.join(app.config['UPLOAD_FOLDER'], cover.cover)
+        if os.path.exists(full_path):
+            return send_file(full_path, mimetype='png/jpg/jpeg' ,as_attachment=True)
+        else:
+            return jsonify({'message': 'File tidak ditemukan'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+>>>>>>> 31a743a18622454a0f88fe142fd97837e6996432
 
 # get klasifikasi buku
 @app.route('/api/getKlasifikasiBuku', methods=['GET'])
