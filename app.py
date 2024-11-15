@@ -587,7 +587,7 @@ def run_automation(id):
         data = request.get_json()
         buku = MasterBuku.query.filter_by(id=id).first()
         book_id = buku.id
-        # ip_address = data.get('ipAddress')
+        ip_address = data.get('ipAddress')
         
         
         # absolute_robot_path= 'D:/Robocorp-projects/testing/tasks.robot'
@@ -597,7 +597,7 @@ def run_automation(id):
             [
                 'robot', 
                 '--variable', f'BOOK_ID:{book_id}',
-                # '--variable', f'IP_ADDRESS:{ip_address}',
+                '--variable', f'IP_ADDRESS:{ip_address}',
                 'D:/otomatisasi-inlis/tasks.robot'
             ], 
             capture_output=True, 
