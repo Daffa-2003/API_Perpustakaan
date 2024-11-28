@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from OpenAI import klasifikasiKeyword as keywords
 from OpenAI import tajukSubjek as tajuk
-from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt_identity, create_refresh_token
+from flask_jwt_extended import create_access_token, JWTManager, jwt_required, create_refresh_token, get_jwt_identity
 import subprocess
 from sqlalchemy import or_, func
 import datetime
@@ -15,9 +15,8 @@ import datetime
 
 app = Flask(__name__)
 CORS(app)
+# url = 'postgresql://postgres:otobook@10.0.2.37:5432/perpustakaan'
 url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
-#url = 'postgresql://postgres:otobook24@otobook24.ch600aquk67o.us-east-1.rds.amazonaws.com:5432/mf_perpus'
-
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 db = SQLAlchemy(app)
@@ -30,7 +29,7 @@ app.config['UPLOAD_FOTOPROFILE'] = UPLOAD_FOTOPROFILE
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['JWT_SECRET_KEY'] = 'naplsdasdlkjasjfkmkj21kjklj4jkg12hgasf'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+# app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=7)
 jwt = JWTManager(app)
 
@@ -143,16 +142,16 @@ def login():
             return jsonify({'message': 'Password salah'}), 400
     except Exception as e:
         return jsonify({'message': str(e)}), 400
+
 @app.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)  # Hanya menerima refresh token
 def refresh():
     current_user = get_jwt_identity()  # Dapatkan user dari refresh token
     new_access_token = create_access_token(identity=current_user)
     return jsonify(access_token=new_access_token), 200
-    
+
 # get user
 @app.route('/api/getUser', methods=['GET'])
-@jwt_required()
 def getUser():
     try:
         user = User.query.all()
@@ -169,7 +168,6 @@ def getUser():
 
 # get  user 
 @app.route('/api/getUser/<id>', methods=['GET'])
-@jwt_required()
 def getUserLogin(id):
     try:
         user = User.query.filter_by(id=id).first()
@@ -239,7 +237,6 @@ def get_profile(filename):
 
 # logout
 @app.route('/api/logout', methods=['POST'])
-@jwt_required()
 def logout():
     try:
         # Hanya kembalikan pesan sukses
@@ -251,7 +248,6 @@ def logout():
 
 # endpoint untuk menambahkan data buku
 @app.route('/api/addBuku/<id>', methods=['POST'])
-@jwt_required()
 def addBuku(id):
     try:
         data = request.get_json()
@@ -321,7 +317,6 @@ def getBuku():
 
 # get buku and sinopsis
 @app.route('/api/getBukuSinopsis', methods=['GET'])
-@jwt_required()
 def getBukuSinopsis():
     try:
         buku = MasterBuku.query.all()
@@ -348,10 +343,9 @@ def getBukuSinopsis():
     except Exception as e:
         return jsonify({'message': str(e)}), 400
     
-
 # get buku by id 
 @app.route("/api/getBuku/<id>", methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getBukuById(id):
     buku = MasterBuku.query.filter_by(id=id).first()
     if buku is None:
@@ -371,7 +365,6 @@ def getBukuById(id):
 
 # edit buku by id
 @app.route('/api/editBuku/<id>', methods=['PUT'])
-@jwt_required()
 def editBuku(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -400,7 +393,6 @@ def editBuku(id):
 
 # delete buku by id
 @app.route('/api/deleteBuku/<id>', methods=['DELETE'])
-@jwt_required()
 def deleteBuku(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -415,7 +407,6 @@ def deleteBuku(id):
 
 # add cover
 @app.route('/api/uploadCover/<master_buku_id>', methods=['POST'])
-@jwt_required()
 def uploadCover(master_buku_id):
     if 'file' not in request.files:
         return jsonify({'message': 'No file part'}), 400
@@ -457,7 +448,6 @@ def get_image(filename):
 
 # edit cover by id
 @app.route('/api/editCover/<id>', methods=['PUT'])
-@jwt_required()
 def editCover(id):
     try:
         cover = CoverBuku.query.filter_by(id=id).first()
@@ -478,7 +468,6 @@ def editCover(id):
     
 # delete cover by id
 @app.route('/api/deleteCover/<id>', methods=['DELETE'])
-@jwt_required()
 def deleteCover(id):
     try:
         cover = CoverBuku.query.filter_by(id=id).first()
@@ -492,7 +481,6 @@ def deleteCover(id):
     
 # add sinopsis
 @app.route('/api/addSinopsis/<master_buku_id>', methods=['POST'])
-@jwt_required()
 def addSinopsis(master_buku_id):
     try:
         data = request.get_json()
@@ -510,7 +498,7 @@ def addSinopsis(master_buku_id):
 
 # get sinopsis by master_buku_id
 @app.route('/api/getSinopsis/<master_buku_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getSinopsis(master_buku_id):
     try:
         sinopsis = SinopsisBuku.query.filter_by(master_buku_id=master_buku_id).first()
@@ -528,18 +516,7 @@ def getSinopsis(master_buku_id):
     
 # get klasifikasi keyword by sinopsis 
 @app.route('/api/getklasifikasi', methods=['POST'])
-# @jwt_required()
 def klasifikasi():
-    # try:
-    #     data = request.get_json()
-    #     key = tajuk.generate_keywords_openai(data['sinopsis'])
-    #     print(key)
-    #     return jsonify({
-    #         'deweyNoClass': key.get('deweyNoClass', 'N/A'),
-    #         'subjek' : key.get('subject', 'N/A'),
-    #     }), 200
-    # except Exception as e:
-    #     return jsonify({'message': str(e)}), 400
     try: 
         data = request.get_json() 
         if not data or 'sinopsis' not in data: 
@@ -551,7 +528,6 @@ def klasifikasi():
 
 # get book and sinopsis by id
 @app.route('/api/getBookSinopsis/<id>', methods=['GET'])
-@jwt_required()
 def getBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -577,10 +553,8 @@ def getBookSinopsis(id):
     except Exception as e:
         return jsonify({'message': str(e)}), 400
     
-
 # edit sinopsis and buku by id
 @app.route('/api/editBookSinopsis/<id>', methods=['PUT'])
-@jwt_required()
 def editBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -625,31 +599,32 @@ def editBookSinopsis(id):
 def run_automation(id):
     try:
         data = request.get_json()
-        ip_address = data.get('ipAddress')
-        Username = data.get('username')
-        Password = data.get('password')
-        
         buku = MasterBuku.query.filter_by(id=id).first()
         book_id = buku.id
-            
+        
+        absolute_robot_path= '/home/otobook/RPA-uiInlis/tasks.robot'
+        
         # Path ke file Robot Framework
         result = subprocess.run(
             [
                 'robot', 
-                '--variable', f'BOOK_ID:{book_id}', 
-                '--variable', f'IP_ADDRESS:{ip_address}',
-                '--variable', f'USERNAME:{Username}',
-                '--variable', f'PASSWORD:{Password}',
-                r'../../../Robocorp-projects/testing/tasks.robot'
+                '--variable', f'BOOK_ID:{book_id}',
+                absolute_robot_path
             ], 
             capture_output=True, 
             text=True, 
-            check=True,
-            shell=True
+            check=True
         )
-        return jsonify({"message": "Data berhasil dimasukkan!"}), 200
+        
+        # Log output hasil subprocess
+        stdout_log = result.stdout
+        stderr_log = result.stderr
+
+        return jsonify({"message": "Data berhasil dimasukkan!", "stdout": stdout_log, "stderr": stderr_log}), 200
+
     except subprocess.CalledProcessError as e:
-        return jsonify({"error": "Terdapat enter pada data Buku"}), 500
+        # Tampilkan pesan error dari subprocess
+        return jsonify({"error": f"Subprocess error: {str(e)}", "stderr": e.stderr}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -659,8 +634,8 @@ def searchBuku():
     try:
         data = request.get_json()
         # sinopsis = SinopsisBuku.query.filter(SinopsisBuku.keyword.like(f"%{keyword['keyword']}%")).all()
-        sinopsis = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), MasterBuku.judul.ilike(f"%{data['keyword']}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()
         bukuList = []
+        sinopsis = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), MasterBuku.judul.ilike(f"%{data['keyword']}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()
         for s in sinopsis:
            bukuList.append({
                 'id': s.master_buku_id,
@@ -693,11 +668,11 @@ def searchBuku():
                 'ilustrator' : b.ilustrator,
                 'sinopsis': None,
                 'keyword': None,
-                'no_class' : None
+                'no_class': None
             })
-        keyword = data['keyword'].replace("-", "")
         # search buku mengunakan sinopsis 
-        isbn = MasterBuku.query.filter(func.replace(MasterBuku.isbn, "-", "").ilike(f"%{keyword}%")).outerjoin(SinopsisBuku, MasterBuku.id == SinopsisBuku.master_buku_id).filter(SinopsisBuku.id.is_(None)).all()
+        scanIsbn = data['keyword'].replace("-","")
+        isbn = MasterBuku.query.filter(func.replace(MasterBuku.isbn, "-", "").ilike(f"%{scanIsbn}%")).outerjoin(SinopsisBuku, MasterBuku.id == SinopsisBuku.master_buku_id).filter(SinopsisBuku.id.is_(None)).all()
         for i in isbn:
             bukuList.append({
                 'id': i.id,
@@ -714,8 +689,7 @@ def searchBuku():
                 'keyword': None,
                 'no_class' : None
             })
-        
-        isbnAll = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), MasterBuku.isbn.ilike(f"%{data['keyword']}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()    
+        isbnAll = SinopsisBuku.query.filter(or_(SinopsisBuku.keyword.ilike(f"%{data['keyword']}%"), func.replace(MasterBuku.isbn, "-", "").ilike(f"%{scanIsbn}%"))).join(MasterBuku, SinopsisBuku.master_buku_id == MasterBuku.id).all()    
         for c in isbnAll:
             bukuList.append({
                 'id': c.master_buku_id,
@@ -740,7 +714,6 @@ def searchBuku():
 
 # get klasifikasi buku
 @app.route('/api/getKlasifikasiBuku', methods=['GET'])
-@jwt_required()
 def getklasifikasi():
     try:
         klasifikasi = KlasifikasiBuku.query.all()
@@ -760,7 +733,6 @@ def getklasifikasi():
 
 # add klasifikasi buku
 @app.route('/api/addKlasfikasi', methods=['POST'])
-@jwt_required()
 def addKlasfikasi():
     try:
         data = request.get_json()
@@ -779,7 +751,6 @@ def addKlasfikasi():
 
 # get by id klasifikasi buku
 @app.route('/api/getKlasifikasiBuku/<id>', methods=['GET'])
-@jwt_required()
 def getKlasifikasiById(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -794,7 +765,6 @@ def getKlasifikasiById(id):
 
 # edit klasifikasi buku by id
 @app.route('/api/editKlasifikasi/<id>', methods=['PUT'])
-@jwt_required()
 def editKlasifikasi(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -819,7 +789,6 @@ def editKlasifikasi(id):
     
 # delete klasifikasi buku by id
 @app.route('/api/deleteKlasifikasi/<id>', methods=['DELETE'])
-@jwt_required()
 def deleteKlasifikasi(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -873,4 +842,4 @@ def getCoverBuku(id):
         return jsonify({'message': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
