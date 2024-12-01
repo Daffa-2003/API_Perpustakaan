@@ -1,13 +1,13 @@
-FROM python:3.11.4-alpine
+FROM python:3.9
 
 RUN apk add --update libpq-dev gcc
-RUN apk add --update pip3
 
 WORKDIR /Digital-Library
 
 COPY app.py requirements.txt /Digital-Library/
 
 RUN python -m pip install --upgrade pip
+
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
