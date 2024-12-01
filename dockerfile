@@ -2,6 +2,7 @@ FROM python:3.11.4-alpine
 
 WORKDIR /Digital-Library
 
+pip install --upgrade pip
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
