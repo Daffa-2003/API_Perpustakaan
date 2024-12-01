@@ -1,7 +1,5 @@
 FROM python:3.9
 
-RUN apk add --update libpq-dev gcc
-
 WORKDIR /Digital-Library
 
 COPY app.py requirements.txt /Digital-Library/
