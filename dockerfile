@@ -1,6 +1,7 @@
 FROM python:3.11.4-alpine
 
 RUN apk add --update libpq-dev gcc
+RUN apk add --update pip3
 
 WORKDIR /Digital-Library
 
