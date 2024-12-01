@@ -2,7 +2,7 @@ FROM python:3.11
 
 WORKDIR /Digital-Library
 
-COPY app.py requirements.txt /Digital-Library/
+COPY .. /Digital-Library/
 
 RUN python -m pip install --upgrade pip
 
