@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Login Docker
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Pull Docker image
       run: sudo docker pull farih652/digitallibrary-backend:latest
     - name: Delete Old docker container
