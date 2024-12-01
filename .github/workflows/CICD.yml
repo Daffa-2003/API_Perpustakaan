@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Pull Docker image
-      run: docker pull farih652/digitallibrary-backend:latest
+      run: sudo docker pull farih652/digitallibrary-backend:latest
     - name: Delete Old docker container
       run: sudo docker rm -f digitallibrary-container || true
     - name: Run Docker Container
