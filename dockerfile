@@ -1,8 +1,8 @@
-RUN apt get update \
-    && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
-
 FROM python:3.11.4-alpine
+
+RUN apk add --update \
+    && apk add -y install libpq-dev gcc \
+    && pip install psycopg2
 
 WORKDIR /Digital-Library
 
