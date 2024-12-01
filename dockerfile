@@ -1,7 +1,6 @@
 FROM python:3.11.4-alpine
 
 RUN apk add --update libpq-dev gcc
-RUN pip install psycopg2
 
 WORKDIR /Digital-Library
 
