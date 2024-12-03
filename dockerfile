@@ -14,4 +14,5 @@ EXPOSE 8770
 
 ENV FLASK_APP=app.py
 
-ENTRYPOINT flask db history
+ENTRYPOINT flask db init && \
+  flask db history
