@@ -9,11 +9,14 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN rm -r ./migrations
+
 EXPOSE 8770
 
 ENV FLASK_APP=app.py
 
 
-CMD ["flask", "db", "migrate", "-m", "done"] && \
+CMD ["flask", "db", "init"] && \
+    ["flask", "db", "migrate", "-m", "done"] && \
     ["flask", "db", "upgrade"] && \
     ["flask", "run", "--host=0.0.0.0"]
