@@ -14,4 +14,5 @@ EXPOSE 8770
 ENV FLASK_APP=app.py
 
 
-CMD ["flask", "db", "history"]
+CMD ["flask", "db", "migrate", "-m", "done"] && \
+    ["flask", "db", "upgrade"]
