@@ -14,4 +14,4 @@ EXPOSE 8770
 ENV FLASK_APP=app.py
 
 
-CMD ["flask", "db", "init"]
+CMD ["flask", "db", "migrate", "-m", "done"]
