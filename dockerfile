@@ -13,4 +13,8 @@ EXPOSE 8770
 
 ENV FLASK_APP=app.py
 
+
+CMD [ "flask", "db", "init"]
+CMD [ "flask", "db", "migrate", "-m", "done"]
+CMD [ "flask", "db", "upgrade"]
 CMD [ "flask", "run", "--host=0.0.0.0"]
