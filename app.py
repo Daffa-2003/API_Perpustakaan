@@ -17,7 +17,8 @@ app = Flask(__name__)
 CORS(app)
 # url = 'postgresql://postgres:otobook@10.0.2.37:5432/perpustakaan'
 # url = 'postgresql://postgres:daffa@localhost/Perpustakaan'
-url = 'postgresql://postgres:cfsfMm58kxjpWDfMZUR5@digitallibrary-db.cjk04w8y2xry.ap-southeast-3.rds.amazonaws.com:5432/perpustakaan'
+#url = 'postgresql://postgres:cfsfMm58kxjpWDfMZUR5@digitallibrary-db.cjk04w8y2xry.ap-southeast-3.rds.amazonaws.com:5432/perpustakaan'
+url = 'postgresql://postgres:cfsfMm58kxjpWDfMZUR5@dl-public.cjk04w8y2xry.ap-southeast-3.rds.amazonaws.com:5432/perpustakaan'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 db = SQLAlchemy(app)
