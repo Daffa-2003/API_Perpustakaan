@@ -15,6 +15,7 @@ EXPOSE 5000
 ENV FLASK_APP=app.py
 
 ENTRYPOINT flask db init && \
+  flask db history && \
   flask db migrate -m "done" && \
   flask db upgrade && \
   flask run --host=0.0.0.0 
