@@ -12,7 +12,6 @@ import subprocess
 from sqlalchemy import or_, func
 import datetime
 
-
 app = Flask(__name__)
 CORS(app)
 url = 'postgresql://postgres:postgres@localhost/Perpustakaan'
@@ -152,7 +151,7 @@ def refresh():
     
 # get user
 @app.route('/api/getUser', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getUser():
     try:
         user = User.query.all()
@@ -169,7 +168,7 @@ def getUser():
 
 # get  user 
 @app.route('/api/getUser/<id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getUserLogin(id):
     try:
         user = User.query.filter_by(id=id).first()
@@ -251,7 +250,7 @@ def logout():
 
 # endpoint untuk menambahkan data buku
 @app.route('/api/addBuku/<id>', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def addBuku(id):
     try:
         data = request.get_json()
@@ -280,7 +279,7 @@ def addBuku(id):
     
 # get buku sesuai dengan user yang membuat
 @app.route('/api/getBuku', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getBuku():
     try:
         # Ambil userId dari query parameters
@@ -321,7 +320,7 @@ def getBuku():
 
 # get buku and sinopsis
 @app.route('/api/getBukuSinopsis', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getBukuSinopsis():
     try:
         buku = MasterBuku.query.all()
@@ -351,7 +350,7 @@ def getBukuSinopsis():
 
 # get buku by id 
 @app.route("/api/getBuku/<id>", methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getBukuById(id):
     buku = MasterBuku.query.filter_by(id=id).first()
     if buku is None:
@@ -371,7 +370,7 @@ def getBukuById(id):
 
 # edit buku by id
 @app.route('/api/editBuku/<id>', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def editBuku(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -400,7 +399,7 @@ def editBuku(id):
 
 # delete buku by id
 @app.route('/api/deleteBuku/<id>', methods=['DELETE'])
-@jwt_required()
+# @jwt_required()
 def deleteBuku(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -415,7 +414,7 @@ def deleteBuku(id):
 
 # add cover
 @app.route('/api/uploadCover/<master_buku_id>', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def uploadCover(master_buku_id):
     if 'file' not in request.files:
         return jsonify({'message': 'No file part'}), 400
@@ -457,7 +456,7 @@ def get_image(filename):
 
 # edit cover by id
 @app.route('/api/editCover/<id>', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def editCover(id):
     try:
         cover = CoverBuku.query.filter_by(id=id).first()
@@ -478,7 +477,7 @@ def editCover(id):
     
 # delete cover by id
 @app.route('/api/deleteCover/<id>', methods=['DELETE'])
-@jwt_required()
+# @jwt_required()
 def deleteCover(id):
     try:
         cover = CoverBuku.query.filter_by(id=id).first()
@@ -492,7 +491,7 @@ def deleteCover(id):
     
 # add sinopsis
 @app.route('/api/addSinopsis/<master_buku_id>', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def addSinopsis(master_buku_id):
     try:
         data = request.get_json()
@@ -510,7 +509,7 @@ def addSinopsis(master_buku_id):
 
 # get sinopsis by master_buku_id
 @app.route('/api/getSinopsis/<master_buku_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getSinopsis(master_buku_id):
     try:
         sinopsis = SinopsisBuku.query.filter_by(master_buku_id=master_buku_id).first()
@@ -551,7 +550,7 @@ def klasifikasi():
 
 # get book and sinopsis by id
 @app.route('/api/getBookSinopsis/<id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -580,7 +579,7 @@ def getBookSinopsis(id):
 
 # edit sinopsis and buku by id
 @app.route('/api/editBookSinopsis/<id>', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def editBookSinopsis(id):
     try:
         buku = MasterBuku.query.filter_by(id=id).first()
@@ -626,8 +625,12 @@ def run_automation(id):
     try:
         data = request.get_json()
         buku = MasterBuku.query.filter_by(id=id).first()
+        user = User.query.filter_by(id=buku.userId).first()
         book_id = buku.id
+        kode_wilayah = data.get('kodeWilayah')
         ip_address = data.get('ipAddress')
+        username = data.get('username')
+        password = data.get('password')
         
         
         # absolute_robot_path= 'D:/Robocorp-projects/testing/tasks.robot'
@@ -637,8 +640,11 @@ def run_automation(id):
             [
                 'robot', 
                 '--variable', f'BOOK_ID:{book_id}',
+                '--variable', f'KODE_WILAYAH:{kode_wilayah}',
                 '--variable', f'IP_ADDRESS:{ip_address}',
-                'D:/otomatisasi-inlis/tasks.robot'
+                '--variable', f'USERNAME_USER :{username}',
+                '--variable', f'PASSWORD_USER :{password}',
+                'D:/Belajar/robot-gambar/tasks.robot'
             ], 
             capture_output=True, 
             text=True, 
@@ -745,7 +751,7 @@ def searchBuku():
 
 # get klasifikasi buku
 @app.route('/api/getKlasifikasiBuku', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getklasifikasi():
     try:
         klasifikasi = KlasifikasiBuku.query.all()
@@ -765,7 +771,7 @@ def getklasifikasi():
 
 # add klasifikasi buku
 @app.route('/api/addKlasfikasi', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def addKlasfikasi():
     try:
         data = request.get_json()
@@ -784,7 +790,7 @@ def addKlasfikasi():
 
 # get by id klasifikasi buku
 @app.route('/api/getKlasifikasiBuku/<id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getKlasifikasiById(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -799,7 +805,7 @@ def getKlasifikasiById(id):
 
 # edit klasifikasi buku by id
 @app.route('/api/editKlasifikasi/<id>', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def editKlasifikasi(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
@@ -824,7 +830,7 @@ def editKlasifikasi(id):
     
 # delete klasifikasi buku by id
 @app.route('/api/deleteKlasifikasi/<id>', methods=['DELETE'])
-@jwt_required()
+# @jwt_required()
 def deleteKlasifikasi(id):
     try:
         klasifikasi = KlasifikasiBuku.query.filter_by(id=id).first()
