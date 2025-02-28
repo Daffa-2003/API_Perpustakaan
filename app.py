@@ -135,8 +135,8 @@ def login():
         if user is None:
             return jsonify({'message': 'User tidak ditemukan'}), 404
         if Bcrypt().check_password_hash(user.password, data['password']):   
-            access_token = create_access_token(identity=user.id)
-            refresh_token = create_refresh_token(identity=user.id)
+            access_token = create_access_token(identity=str(user.id))
+            refresh_token = create_refresh_token(identity=str(user.id))
             return jsonify({'access_token': access_token,'refresh_token':refresh_token ,'id' : user.id}), 200
         else:
             return jsonify({'message': 'Password salah'}), 400
