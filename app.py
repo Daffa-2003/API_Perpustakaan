@@ -624,45 +624,57 @@ def editBookSinopsis(id):
 def run_automation(id):
     try:
         data = request.get_json()
+
+        # Ambil data buku dan user dari database
         buku = MasterBuku.query.filter_by(id=id).first()
+        if not buku:
+            return jsonify({"error": "Buku tidak ditemukan"}), 404
+        
         user = User.query.filter_by(id=buku.userId).first()
+        if not user:
+            return jsonify({"error": "User tidak ditemukan"}), 404
+
+        # Ambil variabel yang akan dikirim ke Robot Framework
         book_id = buku.id
-        kode_wilayah = data.get('kodeWilayah')
-        ip_address = data.get('ipAddress')
-        username = data.get('username')
-        password = data.get('password')
-        
-        
-        # absolute_robot_path= 'D:/Robocorp-projects/testing/tasks.robot'
-        
-        # Path ke file Robot Framework
+        kode_wilayah = data.get('kodeWilayah', '')
+        ip_address = data.get('ipAddress', '')
+        username = data.get('username', '')
+        password = data.get('password', '')
+
+        # Jalankan skrip Robot Framework menggunakan subprocess
         result = subprocess.run(
             [
                 'robot', 
                 '--variable', f'BOOK_ID:{book_id}',
                 '--variable', f'KODE_WILAYAH:{kode_wilayah}',
                 '--variable', f'IP_ADDRESS:{ip_address}',
-                '--variable', f'USERNAME_USER :{username}',
-                '--variable', f'PASSWORD_USER :{password}',
+                '--variable', f'USERNAME_USER:{username}',
+                '--variable', f'PASSWORD_USER:{password}',
                 'D:/Belajar/robot-gambar/tasks.robot'
             ], 
             capture_output=True, 
-            text=True, 
-            check=True
+            text=True
         )
-        
-        # Log output hasil subprocess
-        stdout_log = result.stdout
-        stderr_log = result.stderr
 
-        return jsonify({"message": "Data berhasil dimasukkan!", "stdout": stdout_log, "stderr": stderr_log}), 200
+        # Ambil output dan error dari eksekusi subprocess
+        stdout_log = result.stdout.strip()
 
-    except subprocess.CalledProcessError as e:
-        # Tampilkan pesan error dari subprocess
-        return jsonify({"error": f"Subprocess error: {str(e)}", "stderr": e.stderr}), 500
+        # Jika proses gagal (returncode != 0), tangkap error
+        if result.returncode != 0:
+            return jsonify({
+                "error": "Terjadi kesalahan dalam eksekusi RPA",
+                "return_code": result.returncode,
+                "stdout": stdout_log
+            }), 500
+
+        return jsonify({
+            "message": "Data berhasil dimasukkan!",
+            "stdout": stdout_log
+        }), 200
+
     except Exception as e:
+        app.logger.error(f"Unexpected error: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
 
 # search buku by keyword
 @app.route('/api/searchBuku', methods=['POST'])
